@@ -1,0 +1,19 @@
+<div class="wrapper">
+  <div class="side side-left">
+    <div id="logo" class="clickable">Sandwriter</div>
+    <div id="search-bar">
+      <input matInput placeholder="Search" class="search-icon" [(ngModel)]="searchedText" (keyup.enter)="search()">
+    </div>
+  </div>
+
+  <div class="side side-right">
+    <button mat-button>Articles</button>
+    <div style="margin-left: 20px;"></div>
+    <button mat-button (click)="openLoginDialog()">Log in</button>
+    <button mat-button (click)="openSignupDialog()">Sign up</button>
+
+  </div>
+
+
+
+</div>
