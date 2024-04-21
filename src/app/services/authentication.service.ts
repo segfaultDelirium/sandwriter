@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {SERVER_URL} from "../consts";
-import {firstValueFrom, map, Observable} from "rxjs";
+import {firstValueFrom, map, Observable, Subject} from "rxjs";
 import {sha256} from "js-sha256";
-import {Option} from 'effect';
 
 export type SignupOrLoginResponse = {
   id: string,
@@ -18,6 +17,8 @@ export type User = {
   full_name: string | null,
   gender: string | null,
   biography: string | null,
+  inserted_at: string,
+  updated_at: string,
   deleted_at: string | null,
   phone_number: string | null,
 }
@@ -27,7 +28,6 @@ export type User = {
 })
 export class AuthenticationService {
   token: string = '';
-  userData: Option.Option<User> = Option.none();
 
   constructor(private httpClient: HttpClient) { }
 
@@ -37,6 +37,7 @@ export class AuthenticationService {
     return (this.httpClient.post(`${SERVER_URL}accounts/login`, body, {withCredentials: true}) as Observable<SignupOrLoginResponse>).pipe(
       map(res => {
         this.token = res.token;
+        this.getUserData(res.token).then(userData => this.setUserData(userData));
         return res;
       })
     )
@@ -48,23 +49,35 @@ export class AuthenticationService {
     return (this.httpClient.post(`${SERVER_URL}accounts/create`, body, {withCredentials: true}) as Observable<SignupOrLoginResponse>).pipe(
       map(res => {
         this.token = res.token;
+        this.getUserData(res.token).then(userData => this.setUserData(userData));
         return res;
       })
     )
   }
 
-  isLoggedIn(){
-    return this.token !== '';
+  getTokenFromBackend(){
+    const res = (this.httpClient.get(`${SERVER_URL}accounts/get-token`, {withCredentials: true}) as Observable<string>).pipe(
+      map(token => {
+        this.token = token;
+
+        return token;
+    }));
+    return firstValueFrom(res)
   }
 
-  async getUserData(){
-    if(Option.isNone(this.userData)){
-      const token = this.token;
-      const headers = {'Authorization': `Bearer ${token}`};
-      const userData = await firstValueFrom(this.httpClient.get(`${SERVER_URL}accounts/details`, {headers, withCredentials: true} ) as Observable<User>)
-      this.userData = Option.some(userData);
-    }
-    return this.userData;
+  getUserData(token: string){
+    const headers = {'Authorization': `Bearer ${token}`};
+    const userData = this.httpClient.get(`${SERVER_URL}accounts/details`, {headers, withCredentials: true} ) as Observable<User>
+    return firstValueFrom(userData);
+    // return userData;
+  }
+
+  private _userDataSource = new Subject<User>();
+  userDataMessage$ =
+    this._userDataSource.asObservable();
+
+  setUserData(userData: User) {
+    this._userDataSource.next(userData);
   }
 }
 

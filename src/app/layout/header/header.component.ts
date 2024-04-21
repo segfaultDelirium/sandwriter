@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MaterialModule} from "../../material.module";
 import {FormsModule} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
@@ -6,30 +6,30 @@ import {LoginDialog} from "../../dialogs/login/login-dialog.component";
 import {SignupDialog} from "../../dialogs/signup/signup-dialog.component";
 import {AuthenticationService, User} from "../../services/authentication.service";
 import {Option} from "effect";
+import {Observable} from "rxjs";
+import {Router} from "@angular/router";
+import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MaterialModule, FormsModule],
+  imports: [MaterialModule, FormsModule, AsyncPipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent implements OnInit{
 
-  userData: Option.Option<User> = Option.none();
+  @Input() userData: Observable<User> | null = null;
   searchedText: string = '';
 
   constructor(
     public dialog: MatDialog,
-    private auth: AuthenticationService
+    private auth: AuthenticationService,
+    public router: Router
     ){}
 
   async ngOnInit() {
-    if(this.isLoggedIn()){
-      this.userData = await this.auth.getUserData();
-      console.log(this.userData)
-    }
-    console.log(this.userData)
+    this.userData = this.auth.userDataMessage$
   }
 
 
@@ -63,12 +63,13 @@ export class HeaderComponent implements OnInit{
     });
   }
 
-  isLoggedIn(){
-    return this.auth.isLoggedIn()
+  async setUserData(){
+    // this.userData = await this.auth.getUserData();
+    // this.use
   }
 
-  async setUserData(){
-    this.userData = await this.auth.getUserData();
+  goToAccountDetails(){
+    this.router.navigateByUrl("account")
   }
 
   protected readonly Option = Option;
