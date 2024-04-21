@@ -20,4 +20,8 @@ export class AppComponent {
       console.log(x);
     })
   }
+
+  isLoggedIn(){
+
+  }
 }

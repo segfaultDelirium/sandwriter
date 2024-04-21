@@ -14,7 +14,9 @@ export class SampleBackendService {
 
   getUsers(){
     const token = this.authService.token;
+    // const headers = {'Authorization': `Bearer ${token}`};
     const headers = {'Authorization': `Bearer ${token}`};
-    return (this.httpClient.get(`${SERVER_URL}accounts`, {headers}) as Observable<any>);
+    const httpOptions = {headers, withCredentials: true}
+    return (this.httpClient.get(`${SERVER_URL}accounts`, httpOptions) as Observable<any>);
   }
 }

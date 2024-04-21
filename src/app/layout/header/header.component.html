@@ -9,8 +9,15 @@
   <div class="side side-right">
     <button mat-button>Articles</button>
     <div style="margin-left: 20px;"></div>
-    <button mat-button (click)="openLoginDialog()">Log in</button>
-    <button mat-button (click)="openSignupDialog()">Sign up</button>
+    @if(isLoggedIn() && Option.isSome(userData)){
+      <div>
+        {{userData.value.login}}
+      </div>
+    }@else{
+      <button mat-button (click)="openLoginDialog()">Log in</button>
+      <button mat-button (click)="openSignupDialog()">Sign up</button>
+    }
+
 
   </div>
 

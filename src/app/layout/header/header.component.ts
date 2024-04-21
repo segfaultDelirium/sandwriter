@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MaterialModule} from "../../material.module";
 import {FormsModule} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {LoginDialog} from "../../dialogs/login/login-dialog.component";
 import {SignupDialog} from "../../dialogs/signup/signup-dialog.component";
+import {AuthenticationService, User} from "../../services/authentication.service";
+import {Option} from "effect";
 
 @Component({
   selector: 'app-header',
@@ -12,12 +14,23 @@ import {SignupDialog} from "../../dialogs/signup/signup-dialog.component";
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit{
+
+  userData: Option.Option<User> = Option.none();
+  searchedText: string = '';
 
   constructor(
-    public dialog: MatDialog){}
+    public dialog: MatDialog,
+    private auth: AuthenticationService
+    ){}
 
-  searchedText: string = '';
+  async ngOnInit() {
+    if(this.isLoggedIn()){
+      this.userData = await this.auth.getUserData();
+      console.log(this.userData)
+    }
+    console.log(this.userData)
+  }
 
 
   search(){
@@ -33,6 +46,7 @@ export class HeaderComponent {
 
     dialogRef.afterClosed().subscribe((_result) => {
       console.log('The dialog was closed');
+      this.setUserData();
       // this.animal = result;
     });
   }
@@ -44,8 +58,18 @@ export class HeaderComponent {
 
     dialogRef.afterClosed().subscribe((_result) => {
       console.log('The dialog was closed');
+      this.setUserData();
       // this.animal = result;
     });
   }
 
+  isLoggedIn(){
+    return this.auth.isLoggedIn()
+  }
+
+  async setUserData(){
+    this.userData = await this.auth.getUserData();
+  }
+
+  protected readonly Option = Option;
 }
