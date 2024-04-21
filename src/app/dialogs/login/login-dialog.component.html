@@ -16,6 +16,11 @@
       <input [(ngModel)]="password" type="password" >
       </div>
       <button mat-button (click)="submit()">Log in</button>
+      <div class="height-1em">
+        @if(errorMessage !== ''){
+          <span class="error">{{errorMessage}}</span>
+        }
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

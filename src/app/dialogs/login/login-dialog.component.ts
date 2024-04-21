@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {MatDialogActions, MatDialogContent} from "@angular/material/dialog";
+import {MatDialogActions, MatDialogContent, MatDialogRef} from "@angular/material/dialog";
 import {MatFormField} from "@angular/material/form-field";
 import {MaterialModule} from "../../material.module";
 import {CommonModule} from "@angular/common";
+import {AuthenticationService} from "../../services/authentication.service";
+import {catchError} from "rxjs";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -23,9 +26,27 @@ import {CommonModule} from "@angular/common";
 export class LoginDialog {
   login: string = '';
   password: string = '';
+  errorMessage = '';
+
+  constructor(private auth: AuthenticationService, private dialogRef: MatDialogRef<LoginDialog>) {}
+
+  canSubmit(): boolean{
+    return this.login.trim() !== "" && this.password !== ""
+  }
 
   submit(){
-    console.log("submitting")
+    this.auth.login(this.login, this.password).pipe(catchError( (error: HttpErrorResponse) => {
+      if(error.status === 401){
+        this.errorMessage = "Wrong username or password."
+      }
+      throw error;
+    })).subscribe(response => {
+      console.log(response)
+      // TODO: update the login status on header
+      this.dialogRef.close()
+    })
+    // console.log("submitting")
     // TODO: implement
   }
+
 }

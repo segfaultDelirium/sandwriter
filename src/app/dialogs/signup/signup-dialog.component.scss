@@ -40,7 +40,9 @@ input{
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  width: 340px;
+  margin-right: 20px;
 }
 
 button{
@@ -52,3 +54,8 @@ button{
   display: flex;
   justify-content: right;
 }
+
+.height-1em{
+  height: 1em;
+}
+

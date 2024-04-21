@@ -8,14 +8,24 @@
     </mat-card-header>
     <mat-card-content>
       <div class="input-wrapper">
-        username:
+        login:
         <input [(ngModel)]="login" type="text">
+      </div>
+      <div class="input-wrapper">
+        display name:
+        <input [(ngModel)]="displayName" type="text">
       </div>
       <div  class="input-wrapper">
         password:
         <input [(ngModel)]="password" type="password" >
       </div>
-      <button mat-button (click)="submit()">Sign up</button>
+
+      <button mat-button (click)="submit()" [disabled]="!canSubmit()">Sign up</button>
+      <div class="height-1em">
+        @if(errorMessage !== ''){
+        <span class="error">{{errorMessage}}</span>
+        }
+      </div>
     </mat-card-content>
   </mat-card>
 </div>
