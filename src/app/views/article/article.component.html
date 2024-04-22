@@ -1,4 +1,4 @@
-<div class="host">
+<div *ngIf="article" class="host">
   <div class="article-part">
     <div>
       <div class="title">
@@ -28,7 +28,7 @@
     <div [innerHTML]="article.text" class="article-text"></div>
   </div>
   <div class="comments-part">
-    <div>
+    <div class="comment-button-and-add-icon">
       <div (click)="toggleComments()" class="comments-button clickable">
         <div>Comments</div>
         @if (areCommentsVisible) {
@@ -37,21 +37,31 @@
           <img src="/assets/visibility_FILL0_wght400_GRAD0_opsz24.svg">
         }
       </div>
-      <!--      <h4>Comments</h4>-->
-      @if (areCommentsVisible) {
-        @for (comment of article.comments; track comment.id) {
-          <div class="comment">
-            <div class="comment-author">{{ comment.author.display_name }}
-              <div
-                class="datetime">{{ ISOdateStringToLocaleDate(comment.inserted_at) }}
-              </div>
-            </div>
-            <div class="comment-text">{{ comment.text }}</div>
-            <hr>
-          </div>
-        }
-      }
     </div>
+    <div class="comment-input">
+      <mat-form-field appearance="outline">
+        <mat-label>your comment</mat-label>
+        <textarea [(ngModel)]="commentInput" matInput
+                  placeholder="your comment"></textarea>
+        <div class="button-wrapper">
+          <button (click)="sendComment()" [disabled]="commentInput === ''" mat-raised-button>Comment</button>
+        </div>
+      </mat-form-field>
+    </div>
+    @if (areCommentsVisible) {
+      @for (comment of article.comments; track comment.id) {
+        <div class="comment">
+          <div class="comment-author">{{ comment.author.display_name }}
+            <div
+              class="datetime">{{ ISOdateStringToLocaleDate(comment.inserted_at) }}
+            </div>
+          </div>
+          <div class="comment-text">{{ comment.text }}</div>
+          <hr>
+        </div>
+      }
+    }
+
   </div>
 
 

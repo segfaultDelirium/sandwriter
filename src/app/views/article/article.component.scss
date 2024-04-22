@@ -16,7 +16,7 @@
   }
 
   .comments-part {
-    width: 250px;
+    width: 300px;
     margin-top: 90px;
     margin-left: 50px;
 
@@ -91,6 +91,31 @@
 
 .clicked {
   filter: invert(65%) sepia(58%) saturate(1360%) hue-rotate(359deg) brightness(100%) contrast(105%);
+}
+
+.comment-button-and-add-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .add-icon {
+    margin-left: 20px;
+  }
+}
+
+.comment-input {
+  margin-top: 10px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .button-wrapper {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: end;
+  }
 }
 
 // clicked like or dislike button color: #FFAB00

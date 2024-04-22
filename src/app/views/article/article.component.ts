@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserViewableData } from '../../services/authentication.service';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
+import { ArticleService } from './article.service';
+import { Subscription } from 'rxjs';
+import { FormsModule } from '@angular/forms';
 
 export type Comment = {
   id: string;
@@ -21,6 +24,7 @@ export type Comment = {
 };
 
 export type Article = {
+  id: string;
   author: UserViewableData;
   comments: Comment[];
 
@@ -82,7 +86,123 @@ const sampleComments: Comment[] = [
   },
 ];
 
+@Component({
+  selector: 'app-article',
+  standalone: true,
+  imports: [MaterialModule, CommonModule, FormsModule],
+  templateUrl: './article.component.html',
+  styleUrl: './article.component.scss',
+})
+export class ArticleComponent implements OnInit {
+  // sampleArticle
+  // article: Article | null = sampleArticle;
+  article: Article | null = null;
+  articleSubscription?: Subscription;
+  areCommentsVisible: boolean = false;
+
+  commentInput: string = '';
+  isCommentInputVisible = false;
+
+  constructor(private articleService: ArticleService) {}
+
+  ngOnInit() {
+    this.getArticle();
+  }
+
+  getArticle() {
+    this.articleSubscription = this.articleService
+      .getArticle()
+      .subscribe((article) => {
+        this.article = article;
+        console.log(article);
+      });
+  }
+
+  ISOdateStringToLocaleDate(isoDateString: string) {
+    // TODO: make the date display time in local timezone, not utc
+    // return new Date(isoDateString).toLocaleString('sv');
+    return this.utcIsoDatetimeToDatetimeWithLocalTimezone(isoDateString);
+  }
+
+  toggleComments() {
+    this.areCommentsVisible = !this.areCommentsVisible;
+  }
+
+  toggleLikeArticle() {
+    if (this.article === null) {
+      return;
+    }
+    this.article.is_upvoted_by_current_user =
+      !this.article.is_upvoted_by_current_user;
+
+    if (this.article.is_upvoted_by_current_user) {
+      this.article.upvotes += 1;
+    } else {
+      this.article.upvotes -= 1;
+    }
+
+    if (
+      this.article.is_upvoted_by_current_user &&
+      this.article.is_downvoted_by_current_user
+    ) {
+      this.article.is_downvoted_by_current_user = false;
+      this.article.downvotes -= 1;
+    }
+
+    // TODO: send request to backend to modify article
+  }
+
+  toggleDislikeArticle() {
+    if (this.article === null) {
+      return;
+    }
+    this.article.is_downvoted_by_current_user =
+      !this.article.is_downvoted_by_current_user;
+
+    if (this.article.is_downvoted_by_current_user) {
+      this.article.downvotes += 1;
+    } else {
+      this.article.downvotes -= 1;
+    }
+
+    if (
+      this.article.is_downvoted_by_current_user &&
+      this.article.is_upvoted_by_current_user
+    ) {
+      this.article.is_upvoted_by_current_user = false;
+      this.article.upvotes -= 1;
+    }
+    // TODO: send request to backend to modify article
+  }
+
+  showCommentInput() {
+    this.isCommentInputVisible = true;
+  }
+
+  sendComment() {
+    if (this.article === null) {
+      return;
+    }
+    this.areCommentsVisible = true;
+    this.articleService
+      .sendComment(this.article.id, this.commentInput)
+      .subscribe((comment) => {
+        if (this.article === null) {
+          return;
+        }
+        this.article.comments = [comment, ...this.article.comments];
+      });
+  }
+
+  utcIsoDatetimeToDatetimeWithLocalTimezone(isoDateString: string) {
+    const utcDate = new Date(`${isoDateString}Z`);
+    const localTime = new Date(utcDate.getTime());
+    return new Date(localTime).toLocaleString('sv');
+  }
+}
+
 const sampleArticle: Article = {
+  id: 'a02afe6a-b35b-45cb-a3c9-0c9af3cf76d6',
   author: sampleUser,
   comments: sampleComments,
 
@@ -268,68 +388,3 @@ const sampleArticle: Article = {
   updated_at: '2024-06-01',
   deleted_at: null,
 };
-
-@Component({
-  selector: 'app-article',
-  standalone: true,
-  imports: [MaterialModule, CommonModule],
-  templateUrl: './article.component.html',
-  styleUrl: './article.component.scss',
-})
-export class ArticleComponent {
-  article = sampleArticle;
-  areCommentsVisible: boolean = false;
-
-  ISOdateStringToLocaleDate(isoDateString: string) {
-    // {
-    //       timeZoneName: 'short',
-    //     }
-    return new Date(isoDateString).toLocaleString('sv');
-    // return Date.parse(isoDateString).toLocaleString();
-  }
-
-  toggleComments() {
-    this.areCommentsVisible = !this.areCommentsVisible;
-  }
-
-  toggleLikeArticle() {
-    this.article.is_upvoted_by_current_user =
-      !this.article.is_upvoted_by_current_user;
-
-    if (this.article.is_upvoted_by_current_user) {
-      this.article.upvotes += 1;
-    } else {
-      this.article.upvotes -= 1;
-    }
-
-    if (
-      this.article.is_upvoted_by_current_user &&
-      this.article.is_downvoted_by_current_user
-    ) {
-      this.article.is_downvoted_by_current_user = false;
-      this.article.downvotes -= 1;
-    }
-
-    // TODO: send request to backend to modify article
-  }
-
-  toggleDislikeArticle() {
-    this.article.is_downvoted_by_current_user =
-      !this.article.is_downvoted_by_current_user;
-
-    if (this.article.is_downvoted_by_current_user) {
-      this.article.downvotes += 1;
-    } else {
-      this.article.downvotes -= 1;
-    }
-
-    if (
-      this.article.is_downvoted_by_current_user &&
-      this.article.is_upvoted_by_current_user
-    ) {
-      this.article.is_upvoted_by_current_user = false;
-      this.article.upvotes -= 1;
-    }
-    // TODO: send request to backend to modify article
-  }
-}
