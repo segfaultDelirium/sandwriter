@@ -30,6 +30,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatMenuModule } from '@angular/material/menu';
 
 const materialModules = [
   MatToolbarModule,
@@ -62,6 +63,7 @@ const materialModules = [
   MatStepperModule,
   NgOptimizedImage,
   MatProgressSpinnerModule,
+  MatMenuModule,
 ];
 
 @NgModule({

@@ -1,43 +1,46 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MaterialModule} from "../../material.module";
-import {FormsModule} from "@angular/forms";
-import {MatDialog} from "@angular/material/dialog";
-import {LoginDialog} from "../../dialogs/login/login-dialog.component";
-import {SignupDialog} from "../../dialogs/signup/signup-dialog.component";
-import {AuthenticationService, User} from "../../services/authentication.service";
-import {Option} from "effect";
-import {Observable} from "rxjs";
-import {Router} from "@angular/router";
-import {AsyncPipe} from "@angular/common";
+import { Component, Input, OnInit } from '@angular/core';
+import { MaterialModule } from '../../material.module';
+import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginDialog } from '../../dialogs/login/login-dialog.component';
+import { SignupDialog } from '../../dialogs/signup/signup-dialog.component';
+import {
+  AuthenticationService,
+  User,
+} from '../../services/authentication.service';
+import { Option } from 'effect';
+import { Observable, of } from 'rxjs';
+import { Router } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { MenuComponent } from './menu/menu.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MaterialModule, FormsModule, AsyncPipe],
+  imports: [MaterialModule, FormsModule, AsyncPipe, MenuComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
+  // encapsulation: ViewEncapsulation.None,
 })
-export class HeaderComponent implements OnInit{
-
-  @Input() userData: Observable<User> | null = null;
+export class HeaderComponent implements OnInit {
+  @Input() userData: Observable<User | null> = of(null);
   searchedText: string = '';
+  protected readonly Option = Option;
 
   constructor(
     public dialog: MatDialog,
     private auth: AuthenticationService,
-    public router: Router
-    ){}
+    public router: Router,
+  ) {}
 
   async ngOnInit() {
-    this.userData = this.auth.userDataMessage$
+    this.userData = this.auth.userDataMessage$;
   }
 
-
-  search(){
+  search() {
     console.log(`searching ${this.searchedText}`);
     // TODO: implement
   }
-
 
   openLoginDialog(): void {
     const dialogRef = this.dialog.open(LoginDialog, {
@@ -63,14 +66,8 @@ export class HeaderComponent implements OnInit{
     });
   }
 
-  async setUserData(){
+  async setUserData() {
     // this.userData = await this.auth.getUserData();
     // this.use
   }
-
-  goToAccountDetails(){
-    this.router.navigateByUrl("account")
-  }
-
-  protected readonly Option = Option;
 }

@@ -1,4 +1,4 @@
-.wrapper{
+.wrapper {
   height: 50px;
   background-color: #D1BB9E;
   width: 100%;
@@ -7,7 +7,7 @@
   justify-content: space-between;
 }
 
-#logo{
+#logo {
   //height: 100%;
   //color: #FFF2E1;
   color: white;
@@ -15,32 +15,32 @@
   font-weight: 500;
 }
 
-.side{
+.side {
   display: flex;
   align-items: center;
 
-  &-left{
+  &-left {
     margin-left: 20px;
   }
 
-  &-right{
+  &-right {
     margin-right: 20px;
   }
 }
 
-#search-bar{
+#search-bar {
   background-color: #EAD8C0;
   border-radius: 20px;
   margin-left: 20px;
 }
 
-input{
+input {
   //margin: 10px;
   padding: 10px;
   border-radius: 5px;
 }
 
-.search-icon{
+.search-icon {
   padding-left: 30px;
   background: url("/assets/search_FILL0_wght400_GRAD0_opsz24.svg");
   background-repeat: no-repeat;
@@ -49,11 +49,19 @@ input{
 }
 
 
-
-button{
+button {
   color: white !important;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+mat-menu {
+  color: black;
+}
+
+.mat-mdc-menu-item-text {
+  color: black;
+  font-size: 0.75em !important;
 }
 
 /*

@@ -24,7 +24,6 @@ export class AccountService {
         withCredentials: true,
       },
     ) as Observable<any>;
-    // TODO
   }
 
   updatePassword(password: PasswordChange) {
@@ -35,6 +34,5 @@ export class AccountService {
         withCredentials: true,
       },
     ) as Observable<any>;
-    // TODO
   }
 }

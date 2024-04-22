@@ -5,7 +5,7 @@ import {
   User,
   UserModifiableFields,
 } from '../../services/authentication.service';
-import { catchError, Observable, Subscription } from 'rxjs';
+import { catchError, Subscription } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MaterialModule } from '../../material.module';
 import {
@@ -33,7 +33,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   encapsulation: ViewEncapsulation.None,
 })
 export class AccountComponent implements OnInit, OnDestroy {
-  userData: Observable<User> | null = null;
+  // userData: Observable<User | null> = of(null);
+  userData: User | null = null;
   userDataSubscription?: Subscription;
 
   accountDetailsFormGroup = new FormGroup({
@@ -64,26 +65,39 @@ export class AccountComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.userData = this.authService.userDataMessage$;
-    this.userDataSubscription = this.userData.subscribe((userData) => {
-      this.accountDetailsFormGroup.controls.login.setValue(userData.login);
-      this.accountDetailsFormGroup.controls.displayName.setValue(
-        userData.display_name,
-      );
-      this.accountDetailsFormGroup.controls.biography.setValue(
-        userData.biography,
-      );
-      this.accountDetailsFormGroup.controls.email.setValue(userData.email);
-      this.accountDetailsFormGroup.controls.fullName.setValue(
-        userData.full_name,
-      );
-      this.accountDetailsFormGroup.controls.gender.setValue(userData.gender);
-      this.accountDetailsFormGroup.controls.phoneNumber.setValue(
-        userData.phone_number,
-      );
-      this.accountDetailsFormGroup.markAsPristine();
-      this.onAccountDetailsFormValueChange();
-    });
+    // console.log('in AccountComponent onInit');
+    // this.userData = this.authService.userDataMessage$;
+    const userData = this.authService._userDataSource.getValue();
+    this.handleUserDataChange(userData);
+    this.userDataSubscription = this.authService.userDataMessage$.subscribe(
+      (userData) => {
+        this.handleUserDataChange(userData);
+      },
+    );
+  }
+
+  handleUserDataChange(userData: User | null) {
+    this.userData = userData;
+    // console.log(
+    //   `hello from handleUserDataChange, userData: ${JSON.stringify(userData)}`,
+    // );
+    if (userData === null) return;
+    // debugger;
+    this.accountDetailsFormGroup.controls.login.setValue(userData.login);
+    this.accountDetailsFormGroup.controls.displayName.setValue(
+      userData.display_name,
+    );
+    this.accountDetailsFormGroup.controls.biography.setValue(
+      userData.biography,
+    );
+    this.accountDetailsFormGroup.controls.email.setValue(userData.email);
+    this.accountDetailsFormGroup.controls.fullName.setValue(userData.full_name);
+    this.accountDetailsFormGroup.controls.gender.setValue(userData.gender);
+    this.accountDetailsFormGroup.controls.phoneNumber.setValue(
+      userData.phone_number,
+    );
+    this.accountDetailsFormGroup.markAsPristine();
+    this.onAccountDetailsFormValueChange();
   }
 
   ngOnDestroy() {

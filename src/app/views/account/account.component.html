@@ -2,7 +2,7 @@
   <mat-stepper>
     <mat-step>
       <ng-template matStepLabel>Account details</ng-template>
-      <ng-container *ngIf="userData | async as userData">
+      <ng-container *ngIf="userData">
         <h1>Account details</h1>
         <form [formGroup]="accountDetailsFormGroup">
           <mat-form-field appearance="outline">
