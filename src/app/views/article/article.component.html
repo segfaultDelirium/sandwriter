@@ -30,7 +30,7 @@
   <div class="comments-part">
     <div class="comment-button-and-add-icon">
       <div (click)="toggleComments()" class="comments-button clickable">
-        <div>Comments</div>
+        <div>Comments {{ article.comments.length }}</div>
         @if (areCommentsVisible) {
           <img src="/assets/visibility_off_FILL0_wght400_GRAD0_opsz24.svg">
         } @else {
