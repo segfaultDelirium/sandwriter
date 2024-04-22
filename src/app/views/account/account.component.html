@@ -1,1 +1,87 @@
-<p>account works!</p>
+<div class="host">
+  <mat-stepper>
+    <mat-step>
+      <ng-template matStepLabel>Account details</ng-template>
+      <ng-container *ngIf="userData | async as userData">
+        <h1>Account details</h1>
+        <form [formGroup]="accountDetailsFormGroup">
+          <mat-form-field appearance="outline">
+            <mat-label>login</mat-label>
+            <input [formControl]="accountDetailsFormGroup.controls.login" matInput placeholder="your login">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>displayed name</mat-label>
+            <input [formControl]="accountDetailsFormGroup.controls.displayName" matInput placeholder="displayed name">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>biography</mat-label>
+            <textarea [formControl]="accountDetailsFormGroup.controls.biography" matInput
+                      placeholder="biography"></textarea>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>email</mat-label>
+            <input [formControl]="accountDetailsFormGroup.controls.email" matInput placeholder="email" type="email">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>full name</mat-label>
+            <input [formControl]="accountDetailsFormGroup.controls.fullName" matInput placeholder="full name">
+          </mat-form-field>
+          <!--          <mat-form-field appearance="outline">-->
+          <div>
+            <mat-label>gender:</mat-label>
+            <!--            <input [formControl]="accountDetailsFormGroup.controls.gender" matInput placeholder="gender">-->
+            <mat-radio-group [formControl]="accountDetailsFormGroup.controls.gender" aria-label="Select an option">
+              <mat-radio-button value="male">Male</mat-radio-button>
+              <mat-radio-button value="female">Female</mat-radio-button>
+              <mat-radio-button [value]="null">Other</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <!--          </mat-form-field>-->
+          <mat-form-field appearance="outline">
+            <mat-label>phone number</mat-label>
+            <input [formControl]="accountDetailsFormGroup.controls.phoneNumber" matInput placeholder="phone number">
+          </mat-form-field>
+          <button (click)="updateAccountDetails()" [disabled]="!canUpdateAccountDetails()" mat-raised-button
+                  type="button">
+            update account details
+          </button>
+        </form>
+
+      </ng-container>
+    </mat-step>
+    <mat-step>
+      <h1>Change Password</h1>
+      <ng-template matStepLabel>Change password</ng-template>
+      <form [formGroup]="passwordFormGroup">
+        <mat-form-field appearance="outline">
+          <mat-label>old password</mat-label>
+          <input [formControl]="passwordFormGroup.controls.oldPassword" matInput placeholder="old password"
+                 type="password">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>new password</mat-label>
+          <input [formControl]="passwordFormGroup.controls.newPassword" matInput placeholder="new password"
+                 type="password">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>repeat new password</mat-label>
+          <input [formControl]="passwordFormGroup.controls.newPasswordRepeated" matInput
+                 placeholder="repeat new password"
+                 type="password">
+        </mat-form-field>
+        <button (click)="updatePassword()" [disabled]="!canUpdatePassword()" mat-raised-button type="button">update
+          password
+        </button>
+        @if (passwordChangeResponseMessage !== '') {
+          <div class="response-message">
+            {{ passwordChangeResponseMessage }}
+          </div>
+        }
+
+      </form>
+
+    </mat-step>
+  </mat-stepper>
+
+
+</div>

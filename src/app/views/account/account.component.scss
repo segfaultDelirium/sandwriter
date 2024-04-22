@@ -1,0 +1,36 @@
+//:host {
+//  display: flex;
+//  justify-content: center;
+//  align-items: center;
+//  flex-direction: column;
+//}
+
+.host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+mat-stepper > * {
+  background-color: #FFF2E1;
+
+}
+
+form {
+  //width: 300px;
+  flex-direction: column;
+  display: flex;
+}
+
+.mat-horizontal-stepper-header .mat-step-icon {
+  display: none !important;
+}
+
+mat-radio-button {
+  margin: 10px;
+}
+
+.response-message {
+  color: green;
+}
