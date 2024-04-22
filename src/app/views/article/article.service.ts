@@ -26,4 +26,24 @@ export class ArticleService {
       },
     ) as Observable<Comment>;
   }
+
+  likeArticle(articleId: string) {
+    return this.httpClient.post(
+      `${SERVER_URL}articles/like/${articleId}`,
+      {},
+      {
+        withCredentials: true,
+      },
+    ) as Observable<any>;
+  }
+
+  dislikeArticle(articleId: string) {
+    return this.httpClient.post(
+      `${SERVER_URL}articles/dislike/${articleId}`,
+      {},
+      {
+        withCredentials: true,
+      },
+    ) as Observable<any>;
+  }
 }

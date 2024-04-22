@@ -119,9 +119,9 @@ export class ArticleComponent implements OnInit {
   }
 
   ISOdateStringToLocaleDate(isoDateString: string) {
-    // TODO: make the date display time in local timezone, not utc
-    // return new Date(isoDateString).toLocaleString('sv');
-    return this.utcIsoDatetimeToDatetimeWithLocalTimezone(isoDateString);
+    const utcDate = new Date(`${isoDateString}Z`);
+    const localTime = new Date(utcDate.getTime());
+    return new Date(localTime).toLocaleString('sv');
   }
 
   toggleComments() {
@@ -149,7 +149,9 @@ export class ArticleComponent implements OnInit {
       this.article.downvotes -= 1;
     }
 
-    // TODO: send request to backend to modify article
+    this.articleService.likeArticle(this.article.id).subscribe((x) => {
+      console.log(x);
+    });
   }
 
   toggleDislikeArticle() {
@@ -172,7 +174,9 @@ export class ArticleComponent implements OnInit {
       this.article.is_upvoted_by_current_user = false;
       this.article.upvotes -= 1;
     }
-    // TODO: send request to backend to modify article
+    this.articleService.dislikeArticle(this.article.id).subscribe((x) => {
+      console.log(x);
+    });
   }
 
   showCommentInput() {
@@ -192,12 +196,6 @@ export class ArticleComponent implements OnInit {
         }
         this.article.comments = [comment, ...this.article.comments];
       });
-  }
-
-  utcIsoDatetimeToDatetimeWithLocalTimezone(isoDateString: string) {
-    const utcDate = new Date(`${isoDateString}Z`);
-    const localTime = new Date(utcDate.getTime());
-    return new Date(localTime).toLocaleString('sv');
   }
 }
 
