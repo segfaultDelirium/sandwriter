@@ -1,0 +1,58 @@
+<div class="host">
+  <div class="article-part">
+    <div>
+      <div class="title">
+        <h1>{{ article.title }}</h1>
+      </div>
+      <div class="author">
+        <div>
+          {{ article.author.display_name }} - <span
+          class="datetime">{{ ISOdateStringToLocaleDate(article.inserted_at) }}</span>
+        </div>
+        <div class="likes-dislikes">
+          {{ article.upvotes }}
+          <div (click)="toggleLikeArticle()" class="img-wrapper clickable">
+            <img [class]="article.is_upvoted_by_current_user ? 'clicked' : ''"
+                 src="/assets/thumb_up_FILL0_wght400_GRAD0_opsz24.svg">
+          </div>
+
+          {{ article.downvotes }}
+          <div (click)="toggleDislikeArticle()" class="img-wrapper clickable">
+            <img [class]="article.is_downvoted_by_current_user ? 'clicked' : ''" class="clickable"
+                 src="/assets/thumb_down_FILL0_wght400_GRAD0_opsz24.svg">
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div [innerHTML]="article.text" class="article-text"></div>
+  </div>
+  <div class="comments-part">
+    <div>
+      <div (click)="toggleComments()" class="comments-button clickable">
+        <div>Comments</div>
+        @if (areCommentsVisible) {
+          <img src="/assets/visibility_off_FILL0_wght400_GRAD0_opsz24.svg">
+        } @else {
+          <img src="/assets/visibility_FILL0_wght400_GRAD0_opsz24.svg">
+        }
+      </div>
+      <!--      <h4>Comments</h4>-->
+      @if (areCommentsVisible) {
+        @for (comment of article.comments; track comment.id) {
+          <div class="comment">
+            <div class="comment-author">{{ comment.author.display_name }}
+              <div
+                class="datetime">{{ ISOdateStringToLocaleDate(comment.inserted_at) }}
+              </div>
+            </div>
+            <div class="comment-text">{{ comment.text }}</div>
+            <hr>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+
+</div>

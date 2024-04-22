@@ -16,14 +16,17 @@ export interface User extends UserModifiableFields {
   deleted_at: string | null;
 }
 
-export interface UserModifiableFields {
+export interface UserModifiableFields extends UserViewableData {
   login: string;
-  display_name: string | null;
   full_name: string | null;
   email: string | null;
   phone_number: string | null;
   gender: string | null;
   biography: string | null;
+}
+
+export interface UserViewableData {
+  display_name: string | null;
 }
 
 @Injectable({

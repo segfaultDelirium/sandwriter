@@ -1,0 +1,96 @@
+:host {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.host {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .article-part {
+    width: 666px;
+  }
+
+  .comments-part {
+    width: 250px;
+    margin-top: 90px;
+    margin-left: 50px;
+
+  }
+}
+
+.title {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.author {
+  margin: 20px;
+}
+
+.article-and-comments-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+
+  .article-text {
+    font-size: 1.25em;
+    line-height: 1.5em;
+  }
+
+}
+
+
+.datetime {
+  font-size: 0.9em;
+  color: grey;
+}
+
+.comment {
+  margin: 10px;
+
+  hr {
+    border: none;
+    border-bottom: 1px silver solid;
+
+  }
+
+  &-author {
+    margin: 5px;
+  }
+
+  &-text {
+
+  }
+}
+
+
+.comments-button {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+
+  img {
+    margin-left: 10px;
+  }
+}
+
+.likes-dislikes {
+  display: flex;
+  align-items: center;
+
+  img {
+    margin-right: 10px;
+    margin-left: 3px;
+  }
+}
+
+.clicked {
+  filter: invert(65%) sepia(58%) saturate(1360%) hue-rotate(359deg) brightness(100%) contrast(105%);
+}
+
+// clicked like or dislike button color: #FFAB00
