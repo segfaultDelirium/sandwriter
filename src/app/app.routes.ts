@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AccountComponent } from './views/account/account.component';
 import { HomeComponent } from './views/home/home.component';
 import { ArticleListComponent } from './views/article-list/article-list.component';
+import { ArticleComponent } from './views/article/article.component';
 
 export const routes: Routes = [
   {
@@ -11,6 +12,10 @@ export const routes: Routes = [
   {
     path: 'account',
     component: AccountComponent,
+  },
+  {
+    path: 'articles/:slug',
+    component: ArticleComponent,
   },
   {
     path: 'articles',

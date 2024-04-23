@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthorComponent } from './author/author.component';
 import { ISOdateStringToLocaleDate } from '../../helpers';
 import { Article } from './types';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-article',
@@ -18,6 +19,7 @@ import { Article } from './types';
 export class ArticleComponent implements OnInit {
   // sampleArticle
   // article: Article | null = sampleArticle;
+  articleSlug: string = '';
   article: Article | null = null;
   articleSubscription?: Subscription;
   areCommentsVisible: boolean = false;
@@ -26,15 +28,22 @@ export class ArticleComponent implements OnInit {
   isCommentInputVisible = false;
   readonly ISOdateStringToLocaleDate = ISOdateStringToLocaleDate;
 
-  constructor(private articleService: ArticleService) {}
-
-  ngOnInit() {
-    this.getArticle();
+  constructor(
+    private articleService: ArticleService,
+    private route: ActivatedRoute,
+  ) {
+    this.route.params.subscribe((params) => {
+      this.articleSlug = params['slug'];
+    });
   }
 
-  getArticle() {
+  ngOnInit() {
+    this.getArticle(this.articleSlug);
+  }
+
+  getArticle(articleSlug: string) {
     this.articleSubscription = this.articleService
-      .getArticle()
+      .getArticle(articleSlug)
       .subscribe((article) => {
         this.article = article;
         console.log(article);

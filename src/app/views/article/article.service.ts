@@ -10,9 +10,9 @@ import { Article, ArticleWithoutTextAndComments, Comment } from './types';
 export class ArticleService {
   constructor(private httpClient: HttpClient) {}
 
-  getArticle() {
-    const articleSlug = 'sample-slug-3242';
-    return this.httpClient.get(`${SERVER_URL}articles/${articleSlug}`, {
+  getArticle(slug: string) {
+    // const slug = 'sample-slug-3242';
+    return this.httpClient.get(`${SERVER_URL}articles/${slug}`, {
       withCredentials: true,
     }) as Observable<Article>;
   }
