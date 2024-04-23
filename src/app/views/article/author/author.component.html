@@ -1,0 +1,21 @@
+@if (article) {
+  <div>
+    {{ article.author.display_name }} - <span
+    class="datetime">{{ ISOdateStringToLocaleDate(article.inserted_at) }}</span>
+  </div>
+  <div class="likes-dislikes">
+    {{ article.upvotes }}
+    <div (click)="toggleLikeArticle()" class="img-wrapper clickable">
+      <img [class]="article.is_upvoted_by_current_user ? 'clicked' : ''"
+           src="/assets/thumb_up_FILL0_wght400_GRAD0_opsz24.svg">
+    </div>
+
+    {{ article.downvotes }}
+    <div (click)="toggleDislikeArticle()" class="img-wrapper clickable">
+      <img [class]="article.is_downvoted_by_current_user ? 'clicked' : ''" class="clickable"
+           src="/assets/thumb_down_FILL0_wght400_GRAD0_opsz24.svg">
+    </div>
+
+  </div>
+
+}

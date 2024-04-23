@@ -5,15 +5,11 @@
       <input (keyup.enter)="search()" [(ngModel)]="searchedText" class="search-icon" matInput placeholder="Search">
     </div>
   </div>
-
   <div class="side side-right">
-    <button mat-button>Articles</button>
+    <button (click)="router.navigate(['articles']);" mat-button>Articles</button>
     <div style="margin-left: 20px;"></div>
     @if (userData | async) {
-      <div>
-        <!--        (click)="goToAccountDetails()" -->
-        <app-menu></app-menu>
-      </div>
+      <app-menu></app-menu>
     } @else {
       <button mat-button (click)="openLoginDialog()">Log in</button>
       <button mat-button (click)="openSignupDialog()">Sign up</button>

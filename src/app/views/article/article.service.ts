@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SERVER_URL } from '../../consts';
 import { Observable } from 'rxjs';
-import { Article, Comment } from './article.component';
+import { Article, ArticleWithoutTextAndComments, Comment } from './types';
 
 @Injectable({
   providedIn: 'root',
@@ -45,5 +45,14 @@ export class ArticleService {
         withCredentials: true,
       },
     ) as Observable<any>;
+  }
+
+  getArticlesWithoutTextAndComments() {
+    return this.httpClient.get(
+      `${SERVER_URL}articles/without-text-and-comments/all`,
+      {
+        withCredentials: true,
+      },
+    ) as Observable<ArticleWithoutTextAndComments[]>;
   }
 }

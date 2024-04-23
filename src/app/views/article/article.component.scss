@@ -28,9 +28,9 @@
   text-align: center;
 }
 
-.author {
-  margin: 20px;
-}
+//.author {
+//  margin: 20px;
+//}
 
 .article-and-comments-wrapper {
   display: flex;
@@ -44,11 +44,6 @@
 
 }
 
-
-.datetime {
-  font-size: 0.9em;
-  color: grey;
-}
 
 .comment {
   margin: 10px;
@@ -79,19 +74,6 @@
   }
 }
 
-.likes-dislikes {
-  display: flex;
-  align-items: center;
-
-  img {
-    margin-right: 10px;
-    margin-left: 3px;
-  }
-}
-
-.clicked {
-  filter: invert(65%) sepia(58%) saturate(1360%) hue-rotate(359deg) brightness(100%) contrast(105%);
-}
 
 .comment-button-and-add-icon {
   display: flex;

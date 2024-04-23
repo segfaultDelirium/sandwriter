@@ -1,0 +1,10 @@
+@for (article of articles; track article.id) {
+  <div class="article-element">
+    <span class="clickable"
+          (click)="router.navigate(['/articles/' + article.slug]);">{{ article.title }}
+    </span>
+
+    <app-author [article]="article"></app-author>
+  </div>
+}
+
