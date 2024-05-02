@@ -10,14 +10,14 @@ import {
 } from '../../services/authentication.service';
 import { Option } from 'effect';
 import { Observable, of } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { MenuComponent } from './menu/menu.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MaterialModule, FormsModule, AsyncPipe, MenuComponent],
+  imports: [MaterialModule, FormsModule, AsyncPipe, MenuComponent, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
   // encapsulation: ViewEncapsulation.None,

@@ -11,7 +11,6 @@ export class ArticleService {
   constructor(private httpClient: HttpClient) {}
 
   getArticle(slug: string) {
-    // const slug = 'sample-slug-3242';
     return this.httpClient.get(`${SERVER_URL}articles/${slug}`, {
       withCredentials: true,
     }) as Observable<Article>;
@@ -54,5 +53,15 @@ export class ArticleService {
         withCredentials: true,
       },
     ) as Observable<ArticleWithoutTextAndComments[]>;
+  }
+
+  postArticle(title: string, text: string) {
+    const body = {
+      title,
+      text,
+    };
+    return this.httpClient.post(`${SERVER_URL}articles/create/`, body, {
+      withCredentials: true,
+    }) as Observable<any>;
   }
 }

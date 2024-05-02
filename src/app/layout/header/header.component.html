@@ -1,12 +1,14 @@
 <div class="wrapper">
   <div class="side side-left">
-    <div (click)="router.navigate(['']);" class="clickable" id="logo">Sandwriter</div>
+    <!--    (click)="router.navigate(['']);" -->
+    <a class="clickable" id="logo" mat-button routerLink="">Sandwriter</a>
     <div id="search-bar">
       <input (keyup.enter)="search()" [(ngModel)]="searchedText" class="search-icon" matInput placeholder="Search">
     </div>
   </div>
   <div class="side side-right">
-    <button (click)="router.navigate(['articles']);" mat-button>Articles</button>
+    <a mat-button routerLink="articles/write">Write article</a>
+    <a mat-button routerLink="articles">Articles</a>
     <div style="margin-left: 20px;"></div>
     @if (userData | async) {
       <app-menu></app-menu>

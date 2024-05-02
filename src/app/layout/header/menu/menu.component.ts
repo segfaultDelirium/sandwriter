@@ -3,12 +3,12 @@ import { MaterialModule } from '../../../material.module';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
 import { AuthenticationService } from '../../../services/authentication.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
-  imports: [MaterialModule, FormsModule, AsyncPipe],
+  imports: [MaterialModule, FormsModule, AsyncPipe, RouterLink],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss',
   encapsulation: ViewEncapsulation.None,

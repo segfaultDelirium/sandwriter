@@ -51,6 +51,7 @@ export const sampleArticle: Article = {
   author: sampleUser,
   comments: sampleComments,
 
+  slug: '',
   title: `‘I think I might die if I made it’`,
   text: `<p>
       In the build up to the release of The Tortured Poets Department, Taylor Swift fans had it all figured out.

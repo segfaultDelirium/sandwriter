@@ -1,10 +1,12 @@
 <img [matMenuTriggerFor]="menu" alt="create" class="clickable" height="24"
      ngSrc="/assets/account_circle_FILL0_wght400_GRAD0_opsz24.svg" width="24"/>
 <mat-menu #menu="matMenu">
-  <button (click)="goToAccountDetails()" mat-menu-item>
-    <mat-icon>settings</mat-icon>
-    <span class="clickable">Settings</span>
-  </button>
+  <!--  (click)="goToAccountDetails()"-->
+  <a id="settings-a" mat-menu-item routerLink="account">
+    <button mat-button>
+      <mat-icon>settings</mat-icon>
+      <span class="clickable">Settings</span></button>
+  </a>
   <button (click)="logout()" mat-menu-item>
     <mat-icon>logout</mat-icon>
     <span class="clickable">Logout</span>

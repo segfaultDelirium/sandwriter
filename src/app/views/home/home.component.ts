@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ArticleComponent } from '../article/article.component';
 
 @Component({
@@ -8,4 +8,12 @@ import { ArticleComponent } from '../article/article.component';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent {}
+export class HomeComponent implements OnInit {
+  ngOnInit() {
+    this.myFunction();
+  }
+
+  myFunction() {
+    // console.log(prison(3, 3, [2], [2]));
+  }
+}
