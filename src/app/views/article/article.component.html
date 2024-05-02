@@ -4,9 +4,19 @@
       <div class="title">
         <h1>{{ article.title }}</h1>
       </div>
-      <app-author [article]="article"></app-author>
+      <app-author [articleHeader]="articleToArticleHeader(article)"></app-author>
     </div>
-    <div [innerHTML]="article.text" class="article-text"></div>
+    <div>
+      @for (section of article.sections; track section; let index = $index) {
+        @if (section.section_type === 'TEXT') {
+          <div [innerHTML]="section.text" class="preview-text"></div>
+        } @else {
+          <img [src]="'data:image/png;base64,' + section.image_base_64"/>
+          <div class="image-title">{{ section.image_title }}</div>
+        }
+      }
+    </div>
+    <!--    <div [innerHTML]="article.text" class="article-text"></div>-->
   </div>
   <div class="comments-part">
     <div class="comment-button-and-add-icon">

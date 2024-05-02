@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { SERVER_URL } from '../../consts';
 import { Observable } from 'rxjs';
 import { Article, ArticleWithoutTextAndComments, Comment } from './types';
+import { Section } from '../article-writer/article-writer.component';
 
 @Injectable({
   providedIn: 'root',
@@ -55,23 +56,29 @@ export class ArticleService {
     ) as Observable<ArticleWithoutTextAndComments[]>;
   }
 
-  postArticle(title: string, text: string) {
+  postArticle(title: string, sections: Section[]) {
+    const sectionsWithoutBase64Images = sections.map((section, i) => {
+      return {
+        sectionType: section.sectionType,
+        sectionIndex: i,
+        text: section.text,
+        imageId: section.imageId,
+        imageTitle: section.imageTitle,
+      };
+    });
     const body = {
       title,
-      text,
+      sections: sectionsWithoutBase64Images,
     };
-    return this.httpClient.post(`${SERVER_URL}articles/create/`, body, {
+    return this.httpClient.post(`${SERVER_URL}articles/`, body, {
       withCredentials: true,
     }) as Observable<any>;
   }
 
   // should receive back image uuid
   uploadImage(title: string, formData: FormData) {
-    const queryString = new URLSearchParams({
-      title: title,
-    });
     const body = formData;
-    return this.httpClient.post(`${SERVER_URL}images?${queryString}"}`, body, {
+    return this.httpClient.post(`${SERVER_URL}images`, body, {
       withCredentials: true,
     }) as Observable<any>;
   }

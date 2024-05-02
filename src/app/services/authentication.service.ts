@@ -17,6 +17,7 @@ export interface User extends UserModifiableFields {
 }
 
 export interface UserModifiableFields extends UserViewableData {
+  // account_id: string,
   login: string;
   full_name: string | null;
   email: string | null;

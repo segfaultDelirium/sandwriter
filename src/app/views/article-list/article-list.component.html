@@ -4,7 +4,7 @@
           (click)="router.navigate(['/articles/by-slug/' + article.slug]);">{{ article.title }}
     </span>
 
-    <app-author [article]="article"></app-author>
+    <app-author [articleHeader]="articleToArticleHeader(article)"></app-author>
   </div>
 }
 

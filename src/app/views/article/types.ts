@@ -17,9 +17,20 @@ export type Comment = {
   deleted_at: string | null;
 };
 
+export type SectionType = 'TEXT' | 'IMAGE';
+
+export type SectionSnakeCase = {
+  section_index: number;
+  section_type: SectionType;
+  text: string | null;
+  image_id: string | null;
+  image_base_64: string | null;
+  image_title: string | null;
+};
+
 export interface Article extends ArticleWithoutTextAndComments {
   comments: Comment[];
-  text: string;
+  sections: SectionSnakeCase[];
 }
 
 export interface ArticleWithoutTextAndComments {

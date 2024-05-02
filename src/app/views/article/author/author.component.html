@@ -1,21 +1,23 @@
-@if (article) {
+@if (articleHeader) {
   <div>
-    {{ article.author.display_name }} - <span
-    class="datetime">{{ ISOdateStringToLocaleDate(article.inserted_at) }}</span>
+    {{ articleHeader.display_name }} - <span
+    class="datetime">{{ ISOdateStringToLocaleDate(articleHeader.inserted_at) }}</span>
   </div>
   <div class="likes-dislikes">
-    {{ article.upvotes }}
-    <div (click)="toggleLikeArticle()" class="img-wrapper clickable">
-      <img [class]="article.is_upvoted_by_current_user ? 'clicked' : ''"
-           src="/assets/thumb_up_FILL0_wght400_GRAD0_opsz24.svg">
-    </div>
-
-    {{ article.downvotes }}
-    <div (click)="toggleDislikeArticle()" class="img-wrapper clickable">
-      <img [class]="article.is_downvoted_by_current_user ? 'clicked' : ''" class="clickable"
-           src="/assets/thumb_down_FILL0_wght400_GRAD0_opsz24.svg">
-    </div>
-
+    {{ upvotes }}
+    <button mat-icon-button (click)="toggleLikeArticle()"
+            [disabled]="isLikeDislikeDisabled"
+            [class]="is_upvoted_by_current_user ? 'clicked' : ''"
+    >
+      <mat-icon>thumb_up</mat-icon>
+    </button>
+    {{ downvotes }}
+    <button mat-icon-button (click)="toggleDislikeArticle()"
+            [disabled]="isLikeDislikeDisabled"
+            [class]="is_downvoted_by_current_user ? 'clicked' : ''"
+    >
+      <mat-icon>thumb_down</mat-icon>
+    </button>
   </div>
 
 }

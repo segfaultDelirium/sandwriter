@@ -21,10 +21,10 @@
     height: calc(100vh - 150px);
     max-width: 666px;
 
-    .pane-content {
-      border: 1px solid silver;
-      height: calc(100% - 50px);
-    }
+    //.pane-content {
+    //  border: 1px solid silver;
+    //  height: calc(100% - 50px);
+    //}
   }
 
   #article-editor {
@@ -32,6 +32,7 @@
     h1 {
       display: flex;
       flex-direction: row;
+
       justify-content: center;
       align-items: center;
 
@@ -43,15 +44,6 @@
     .article-title-form-field {
       width: calc(100% - 20px);
       margin-top: 10px;
-    }
-
-    .article-text-form-field {
-      width: calc(100% - 20px);
-      height: calc(100% - 100px)
-    }
-
-    textarea {
-      height: calc(100vh - 330px);
     }
   }
 
@@ -67,7 +59,6 @@
 
   .preview-text {
     text-align: start;
-    padding-left: 20px;
     padding-right: 20px;
   }
 }
@@ -82,4 +73,87 @@
 
 .file-input {
   display: none;
+}
+
+.add-section-button {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFF2E1;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 5px;
+
+  &:hover {
+    filter: brightness(90%);
+  }
+}
+
+.section-adding-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.sections-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  display: flex;
+  flex-direction: row;
+
+  .section-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .section-content {
+    width: 100%;
+
+    mat-form-field {
+      width: calc(100% - 22px);
+
+      textarea {
+        min-height: 100px;
+      }
+    }
+
+    .section-adding-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      button {
+        margin: 5px;
+      }
+    }
+  }
+}
+
+.image-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+app-author {
+  text-align: left;
+}
+
+.image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  img {
+    margin-bottom: 10px;
+  }
 }

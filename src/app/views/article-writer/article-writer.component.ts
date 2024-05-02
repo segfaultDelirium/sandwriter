@@ -1,9 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../material.module';
 import { ArticleService } from '../article/article.service';
-import { AuthorComponent } from '../article/author/author.component';
+import {
+  ArticleHeader,
+  AuthorComponent,
+} from '../article/author/author.component';
 import { Subscription } from 'rxjs';
+import {
+  AuthenticationService,
+  User,
+} from '../../services/authentication.service';
+import { getCurrentISODateString } from '../../helpers';
+import { SectionType } from '../article/types';
+import { Router } from '@angular/router';
+
+const emptyTextSection: Section = {
+  sectionType: 'TEXT',
+  text: '',
+  imageId: null,
+  imageTitle: null,
+  imageBase64: null,
+};
+
+export type Section = {
+  sectionType: SectionType;
+  text: string | null; // if sectionType is TEXT, then this is not null
+  imageId: string | null; // if sectionType is IMAGE than this is not null
+  imageBase64: string | null; // if sectionType is IMAGE than this is not null
+  imageTitle: string | null; // if sectionType is IMAGE than this is not null
+};
 
 @Component({
   selector: 'app-article-writer',
@@ -12,58 +38,136 @@ import { Subscription } from 'rxjs';
   templateUrl: './article-writer.component.html',
   styleUrl: './article-writer.component.scss',
 })
-export class ArticleWriterComponent {
-  articleText: string = '';
+export class ArticleWriterComponent implements OnInit {
+  // articleText: string = '';
   articleTitle: string = '';
+  userData: User | null = null;
+  userDataSubscription?: Subscription;
+
+  sections: Section[] = [{ ...emptyTextSection }];
 
   uploadImageSubscription?: Subscription;
 
-  constructor(private articleService: ArticleService) {}
+  constructor(
+    private articleService: ArticleService,
+    private authService: AuthenticationService,
+    private router: Router,
+  ) {}
+
+  ngOnInit() {
+    this.userDataSubscription = this.authService.userDataMessage$.subscribe(
+      (userData) => {
+        this.userData = userData;
+      },
+    );
+  }
 
   postArticle() {
     this.articleService
-      .postArticle(this.articleTitle, this.articleText)
+      .postArticle(this.articleTitle, this.sections)
       .subscribe((x) => {
-        console.log(x);
+        const slug = x.slug;
+        this.router.navigate(['/articles/by-slug/' + slug]);
       });
   }
 
   canPostArticle() {
-    return this.articleText !== '' && this.articleTitle !== '';
+    return this.sections.length !== 0 && this.articleTitle !== '';
   }
 
-  onFileSelected(event: any) {
+  uploadImage(event: any, index: number | undefined = undefined) {
     const file: File = event.target.files[0];
-    debugger;
     if (file && file.type.startsWith('image')) {
       const formData = new FormData();
       formData.append('uploaded_image', file);
       this.uploadImageSubscription = this.articleService
         .uploadImage('sample_title', formData)
         .subscribe((x) => {
-          console.log(x);
-          this.articleText += `
-            <canvas id="${x.id}"></canvas>
-          `;
-          this.drawImage(x.id, x.data);
+          this.addImageSection(x.id, x.data, x.title, index);
         });
     }
   }
 
-  drawImage(canvasId: string, imageBase64: string) {
-    debugger;
-    const img = new Image(); // Create a new Image
-    img.onload = function () {
-      console.log('hello from img.onload');
-      const canvas = document.getElementById(
-        'sample_canvas',
-      )! as HTMLCanvasElement;
-      debugger;
-      const ctx = canvas.getContext('2d')!;
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.drawImage(img, 0, 0); // Draw the image on the canvas
+  addImageSection(
+    imageId: string,
+    imageBase64: string,
+    imageTitle: string,
+    index: number | undefined,
+  ) {
+    const newSection: Section = {
+      sectionType: 'IMAGE',
+      text: null,
+      imageId: imageId,
+      imageBase64: imageBase64,
+      imageTitle: imageTitle,
     };
-    img.src = `data:image/png;base64,${imageBase64}`;
+    const i = index === undefined ? this.sections.length : index + 1;
+    const sectionsBefore = this.sections.slice(0, i);
+    const sectionsAfter = this.sections.slice(i, this.sections.length);
+    this.sections = [...sectionsBefore, newSection, ...sectionsAfter];
+  }
+
+  addTextSection(index: number | undefined = undefined) {
+    const newSection = { ...emptyTextSection };
+    const i = index === undefined ? this.sections.length : index + 1;
+    const sectionsBefore = this.sections.slice(0, i);
+    const sectionsAfter = this.sections.slice(i, this.sections.length);
+    this.sections = [...sectionsBefore, newSection, ...sectionsAfter];
+  }
+
+  moveSectionUp(sectionIndex: number) {
+    const sectionAbove = this.sections[sectionIndex - 1];
+    const sectionsAbove = this.sections.slice(0, sectionIndex - 1);
+    const sectionsBelow = this.sections.slice(
+      sectionIndex + 1,
+      this.sections.length,
+    );
+
+    const currentSection = this.sections[sectionIndex];
+    const newSections = [
+      ...sectionsAbove,
+      currentSection,
+      sectionAbove,
+      ...sectionsBelow,
+    ];
+    this.sections = newSections;
+  }
+
+  moveSectionDown(sectionIndex: number) {
+    const sectionBelow = this.sections[sectionIndex + 1];
+    const sectionsAbove = this.sections.slice(0, sectionIndex);
+    const sectionsBelow = this.sections.slice(
+      sectionIndex + 2,
+      this.sections.length,
+    );
+
+    const currentSection = this.sections[sectionIndex];
+    const newSections = [
+      ...sectionsAbove,
+      sectionBelow,
+      currentSection,
+      ...sectionsBelow,
+    ];
+    this.sections = newSections;
+  }
+
+  deleteSection(sectionIndex: number) {
+    this.sections = this.sections.filter(
+      (_section, index) => index !== sectionIndex,
+    );
+  }
+
+  getArticleHeader() {
+    const display_name = this.userData ? this.userData!.display_name ?? '' : '';
+    const articleHeader: ArticleHeader = {
+      article_id: null,
+      display_name: display_name,
+      is_upvoted_by_current_user: false,
+      is_downvoted_by_current_user: false,
+      inserted_at: getCurrentISODateString(),
+      upvotes: 0,
+      downvotes: 0,
+    };
+    return articleHeader;
   }
 }
