@@ -3,7 +3,21 @@
 </div>
 <div class="panes-wrapper">
   <div class="pane" id="article-editor">
-    <h1>Editor</h1>
+    <h1>
+      <div>Editor</div>
+      <div class="image-upload-div">
+        <input #fileUpload (change)="onFileSelected($event)"
+               class="file-input" type="file">
+
+        <div class="file-upload">
+          <button (click)="fileUpload.click()" accept="image/*" class="upload-btn" color="white"
+                  mat-mini-fab>
+            <img class="clickable" src="/assets/image_FILL0_wght400_GRAD0_opsz24.svg">
+          </button>
+        </div>
+      </div>
+    </h1>
+    <!--    <canvas id="sample_canvas"></canvas>-->
     <div class="pane-content">
       <mat-form-field appearance="outline" class="article-title-form-field">
         <mat-label>Title of the article</mat-label>

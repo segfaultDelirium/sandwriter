@@ -3,6 +3,7 @@
   height: calc(100vh - 150px);
 }
 
+
 .panes-wrapper {
   display: flex;
   align-items: start;
@@ -27,6 +28,18 @@
   }
 
   #article-editor {
+
+    h1 {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      .image-upload-div {
+        margin-left: 20px;
+      }
+    }
+
     .article-title-form-field {
       width: calc(100% - 20px);
       margin-top: 10px;
@@ -65,4 +78,8 @@
   width: 100%;
   justify-content: center;
   margin-top: 10px;
+}
+
+.file-input {
+  display: none;
 }

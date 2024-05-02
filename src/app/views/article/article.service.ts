@@ -64,4 +64,15 @@ export class ArticleService {
       withCredentials: true,
     }) as Observable<any>;
   }
+
+  // should receive back image uuid
+  uploadImage(title: string, formData: FormData) {
+    const queryString = new URLSearchParams({
+      title: title,
+    });
+    const body = formData;
+    return this.httpClient.post(`${SERVER_URL}images?${queryString}"}`, body, {
+      withCredentials: true,
+    }) as Observable<any>;
+  }
 }
