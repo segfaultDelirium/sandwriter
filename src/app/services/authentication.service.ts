@@ -1,33 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { SERVER_URL } from '../consts';
 import { BehaviorSubject, firstValueFrom, map, Observable } from 'rxjs';
 import { sha256 } from 'js-sha256';
+import { HttpService } from './http.service';
+import { Timestamps } from '../types';
 
 export type SignupOrLoginResponse = {
   id: string;
   login: string;
-  token: string;
 };
 
-export interface User extends UserModifiableFields {
-  inserted_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-}
+export interface User extends UserModifiableFields, Timestamps {}
 
-export interface UserModifiableFields extends UserViewableData {
-  // account_id: string,
+export interface UserModifiableFields {
   login: string;
-  full_name: string | null;
+  fullName: string | null;
   email: string | null;
-  phone_number: string | null;
+  phoneNumber: string | null;
   gender: string | null;
   biography: string | null;
-}
-
-export interface UserViewableData {
-  display_name: string | null;
+  displayName: string | null;
 }
 
 @Injectable({
@@ -37,66 +29,62 @@ export class AuthenticationService {
   _userDataSource = new BehaviorSubject<User | null>(null);
   userDataMessage$ = this._userDataSource.asObservable();
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpService: HttpService) {}
 
-  login(login: string, password: string) {
-    const hashed_password = hashPassword(password);
+  public login(login: string, password: string) {
+    const hashedPassword = hashPassword(password);
     const body = {
-      account: { login: login, hashed_password: hashed_password },
+      account: { login: login, hashedPassword: hashedPassword },
     };
     return (
-      this.httpClient.post(`${SERVER_URL}accounts/login`, body, {
-        withCredentials: true,
-      }) as Observable<SignupOrLoginResponse>
-    ).pipe(
-      map((res) => {
-        // this.token = res.token;
-        this.getUserData().then((userData) => this.setUserData(userData));
-        return res;
-      }),
-    );
+      this.httpService.post(
+        `${SERVER_URL}accounts/login`,
+        body,
+      ) as Observable<SignupOrLoginResponse>
+    ).pipe(map((x) => this.queryUserDataAndSetItPipe(x)));
   }
 
-  signup(login: string, displayName: string, password: string) {
+  public signup(login: string, displayName: string, password: string) {
     const hashed_password = hashPassword(password);
     const body = {
       account: {
         login: login,
-        display_name: displayName,
-        hashed_password: hashed_password,
+        displayName: displayName,
+        hashedPassword: hashed_password,
       },
     };
     return (
-      this.httpClient.post(`${SERVER_URL}accounts/create`, body, {
-        withCredentials: true,
-      }) as Observable<SignupOrLoginResponse>
-    ).pipe(
-      map((res) => {
-        this.getUserData().then((userData) => this.setUserData(userData));
-        return res;
-      }),
-    );
+      this.httpService.post(
+        `${SERVER_URL}accounts/create`,
+        body,
+      ) as Observable<SignupOrLoginResponse>
+    ).pipe(map((x) => this.queryUserDataAndSetItPipe(x)));
   }
 
-  logout() {
-    return this.httpClient
-      .post(`${SERVER_URL}accounts/logout`, {}, { withCredentials: true })
-      .pipe(
-        map((x) => {
-          this._userDataSource.next(null);
-          return x;
-        }),
-      );
+  public logout() {
+    return this.httpService
+      .post(`${SERVER_URL}accounts/logout`, {})
+      .pipe(map((x) => this.clearUserDataPipe(x)));
   }
 
-  getUserData() {
-    const userData = this.httpClient.get(`${SERVER_URL}accounts/details`, {
-      withCredentials: true,
-    }) as Observable<User>;
+  public queryUserDataAndSetItPipe(x?: any) {
+    this.queryUserData().then((userData) => this.setUserData(userData));
+    return x;
+  }
+
+  private clearUserDataPipe(x?: any) {
+    this._userDataSource.next(null);
+    return x;
+  }
+
+  private queryUserData() {
+    const userData = this.httpService.get(
+      `${SERVER_URL}accounts/details`,
+    ) as Observable<User>;
     return firstValueFrom(userData);
   }
 
-  setUserData(userData: User) {
+  private setUserData(userData: User) {
     this._userDataSource.next(userData);
   }
 }

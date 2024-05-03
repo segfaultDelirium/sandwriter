@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { UserModifiableFields } from '../../services/authentication.service';
 import { SERVER_URL } from '../../consts';
 import { Observable } from 'rxjs';
+import { User } from '../../services/authentication.service';
+import { HttpService } from '../../services/http.service';
 
 export type PasswordChange = {
-  old_password: string;
-  new_password: string;
-  new_password_repeated: string;
+  oldPassword: string;
+  newPassword: string;
+  newPasswordRepeated: string;
 };
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpService: HttpService) {}
 
-  updateAccountDetails(userModifiableFields: UserModifiableFields) {
-    return this.httpClient.post(
+  updateAccountDetails(userModifiableFields: User) {
+    return this.httpService.post(
       `${SERVER_URL}accounts/change-details`,
       userModifiableFields,
       {
@@ -27,7 +27,7 @@ export class AccountService {
   }
 
   updatePassword(password: PasswordChange) {
-    return this.httpClient.post(
+    return this.httpService.post(
       `${SERVER_URL}accounts/change-password`,
       password,
       {

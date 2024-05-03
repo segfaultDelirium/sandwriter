@@ -1,9 +1,15 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import {
   AuthenticationService,
   hashPassword,
   User,
-  UserModifiableFields,
 } from '../../services/authentication.service';
 import { catchError, Subscription } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
@@ -56,13 +62,48 @@ export class AccountComponent implements OnInit, OnDestroy {
     newPasswordRepeated: new FormControl<string>(''),
   });
 
-  passwordChangeResponseMessage: string = '';
+  isOldPasswordCleartext: boolean = false;
+  isNewPasswordCleartext: boolean = false;
+  isNewPasswordRepeatedCleartext: boolean = false;
+  @ViewChild('oldPasswordInput') oldPasswordInput!: ElementRef;
+  @ViewChild('newPasswordInput') newPasswordInput!: ElementRef;
+  @ViewChild('newPasswordRepeatedInput') newPasswordRepeatedInput!: ElementRef;
 
   constructor(
     private authService: AuthenticationService,
     private accountService: AccountService,
     private _snackBar: MatSnackBar,
   ) {}
+
+  showOldPassword() {
+    showPassword(this.oldPasswordInput);
+    this.isOldPasswordCleartext = true;
+  }
+
+  hideOldPassword() {
+    hidePassword(this.oldPasswordInput);
+    this.isOldPasswordCleartext = false;
+  }
+
+  showNewPassword() {
+    showPassword(this.newPasswordInput);
+    this.isNewPasswordCleartext = true;
+  }
+
+  hideNewPassword() {
+    hidePassword(this.newPasswordInput);
+    this.isNewPasswordCleartext = false;
+  }
+
+  showNewPasswordRepeated() {
+    showPassword(this.newPasswordRepeatedInput);
+    this.isNewPasswordRepeatedCleartext = true;
+  }
+
+  hideNewPasswordRepeated() {
+    hidePassword(this.newPasswordRepeatedInput);
+    this.isNewPasswordRepeatedCleartext = false;
+  }
 
   ngOnInit() {
     // console.log('in AccountComponent onInit');
@@ -85,16 +126,16 @@ export class AccountComponent implements OnInit, OnDestroy {
     // debugger;
     this.accountDetailsFormGroup.controls.login.setValue(userData.login);
     this.accountDetailsFormGroup.controls.displayName.setValue(
-      userData.display_name,
+      userData.displayName,
     );
     this.accountDetailsFormGroup.controls.biography.setValue(
       userData.biography,
     );
     this.accountDetailsFormGroup.controls.email.setValue(userData.email);
-    this.accountDetailsFormGroup.controls.fullName.setValue(userData.full_name);
+    this.accountDetailsFormGroup.controls.fullName.setValue(userData.fullName);
     this.accountDetailsFormGroup.controls.gender.setValue(userData.gender);
     this.accountDetailsFormGroup.controls.phoneNumber.setValue(
-      userData.phone_number,
+      userData.phoneNumber,
     );
     this.accountDetailsFormGroup.markAsPristine();
     this.onAccountDetailsFormValueChange();
@@ -120,19 +161,18 @@ export class AccountComponent implements OnInit, OnDestroy {
       JSON.stringify(this.accountDetailsFormGroup.value),
     );
     console.log(payload);
-    const payloadSnakeCase: UserModifiableFields = {
-      login: payload.login,
-      display_name: payload.displayName,
-      full_name: payload.fullName,
-      email: payload.email,
-      phone_number: payload.phoneNumber,
-      gender: payload.gender,
-      biography: payload.biography,
-    };
     this.accountService
-      .updateAccountDetails(payloadSnakeCase)
+      .updateAccountDetails(payload)
+      .pipe(
+        catchError((e: HttpErrorResponse) => {
+          if (e.status === 409) {
+            this.openSnackBar(e.error, 'ok');
+          }
+          throw e;
+        }),
+      )
       .subscribe((x) => {
-        console.log(x);
+        this.openSnackBar('update successful', 'ok');
       });
   }
 
@@ -155,13 +195,13 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   updatePassword() {
     const passwordChange: PasswordChange = {
-      old_password: hashPassword(
+      oldPassword: hashPassword(
         this.passwordFormGroup.controls.oldPassword.value!,
       ),
-      new_password: hashPassword(
+      newPassword: hashPassword(
         this.passwordFormGroup.controls.newPassword.value!,
       ),
-      new_password_repeated: hashPassword(
+      newPasswordRepeated: hashPassword(
         this.passwordFormGroup.controls.newPasswordRepeated.value!,
       ),
     };
@@ -169,14 +209,12 @@ export class AccountComponent implements OnInit, OnDestroy {
       .updatePassword(passwordChange)
       .pipe(
         catchError((e: HttpErrorResponse) => {
-          // this.passwordChangeResponseMessage = e.error.errors;
           this.openSnackBar(e.error.errors, 'ok');
           throw e;
         }),
       )
       .subscribe((x) => {
         console.log(x);
-        // this.passwordChangeResponseMessage = 'updating password successful';
         this.openSnackBar('updating password successful', 'ok');
       });
   }
@@ -184,4 +222,14 @@ export class AccountComponent implements OnInit, OnDestroy {
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
+}
+
+function showPassword(input: ElementRef) {
+  const inputElement: HTMLInputElement = input.nativeElement;
+  inputElement.type = 'text';
+}
+
+function hidePassword(input: ElementRef) {
+  const inputElement: HTMLInputElement = input.nativeElement;
+  inputElement.type = 'password';
 }

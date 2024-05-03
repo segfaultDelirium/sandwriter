@@ -1,20 +1,22 @@
-import { UserViewableData } from '../../services/authentication.service';
+import { User } from '../../services/authentication.service';
 
 export type Comment = {
   id: string;
-  author: UserViewableData;
+  author: {
+    displayName: string;
+  };
   replies: Comment[];
   // replies_to: string | null; // comment id if is reply to another comment or null.
   text: string;
 
-  upvotes: number;
-  downvotes: number;
-  is_upvoted_by_current_user: boolean;
-  is_downvoted_by_current_user: boolean;
+  likes: number;
+  dislikes: number;
+  isLikedByCurrentUser: boolean;
+  isDislikedByCurrentUser: boolean;
 
-  inserted_at: string;
-  updated_at: string;
-  deleted_at: string | null;
+  insertedAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 };
 
 export type SectionType = 'TEXT' | 'IMAGE';
@@ -28,23 +30,32 @@ export type SectionSnakeCase = {
   image_title: string | null;
 };
 
+export type Section = {
+  sectionIndex: number;
+  sectionType: SectionType;
+  text: string | null;
+  imageId: string | null;
+  imageBase64: string | null;
+  imageTitle: string | null;
+};
+
 export interface Article extends ArticleWithoutTextAndComments {
   comments: Comment[];
-  sections: SectionSnakeCase[];
+  sections: Section[];
 }
 
 export interface ArticleWithoutTextAndComments {
   id: string;
-  author: UserViewableData;
+  author: User;
   title: string;
   slug: string;
 
-  upvotes: number;
-  downvotes: number;
-  is_upvoted_by_current_user: boolean;
-  is_downvoted_by_current_user: boolean;
+  likes: number;
+  dislikes: number;
+  isLikedByCurrentUser: boolean;
+  isDislikedByCurrentUser: boolean;
 
-  inserted_at: string;
-  updated_at: string;
-  deleted_at: string | null;
+  insertedAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 }

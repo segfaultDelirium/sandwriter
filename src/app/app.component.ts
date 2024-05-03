@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { MaterialModule } from './material.module';
-import { SampleBackendService } from './sample-backend-service/sample-backend.service';
 import { AuthenticationService } from './services/authentication.service';
 
 @Component({
@@ -15,35 +14,13 @@ import { AuthenticationService } from './services/authentication.service';
 export class AppComponent implements OnInit {
   title = 'sandwriter';
 
-  // userData: User | null = null;
-
-  constructor(
-    private sampleBackendService: SampleBackendService,
-    private authService: AuthenticationService,
-  ) {}
-
-  getUsers() {
-    this.sampleBackendService.getUsers().subscribe((x) => {
-      console.log(x);
-    });
-  }
+  constructor(private authService: AuthenticationService) {}
 
   ngOnInit() {
-    // this.getTokenFromBackend();
     this.getUserData();
   }
 
   async getUserData() {
-    // const res = this.authService.getTokenFromBackend().pipe(map(token => {
-    //   return this.authService.getUserData(token)
-    // }));
-    this.authService
-      .getUserData()
-      .then((userData) => this.authService.setUserData(userData));
-    // const res = await this.authService
-    //   .getTokenFromBackend()
-    //   .then((token) => this.authService.getUserData(token));
-    // this.authService.setUserData(res);
-    // this.userData = res;
+    this.authService.queryUserDataAndSetItPipe();
   }
 }

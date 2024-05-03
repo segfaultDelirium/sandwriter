@@ -158,15 +158,18 @@ export class ArticleWriterComponent implements OnInit {
   }
 
   getArticleHeader() {
-    const display_name = this.userData ? this.userData!.display_name ?? '' : '';
+    if (this.userData === null) {
+      return null;
+    }
+    // const display_name = this.userData ? this.userData!.displayName ?? '' : '';
     const articleHeader: ArticleHeader = {
-      article_id: null,
-      display_name: display_name,
-      is_upvoted_by_current_user: false,
-      is_downvoted_by_current_user: false,
-      inserted_at: getCurrentISODateString(),
-      upvotes: 0,
-      downvotes: 0,
+      articleId: null,
+      author: this.userData,
+      isLikedByCurrentUser: false,
+      isDislikedByCurrentUser: false,
+      insertedAt: getCurrentISODateString(),
+      likes: 0,
+      dislikes: 0,
     };
     return articleHeader;
   }

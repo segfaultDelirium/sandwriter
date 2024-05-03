@@ -8,11 +8,11 @@
     </div>
     <div>
       @for (section of article.sections; track section; let index = $index) {
-        @if (section.section_type === 'TEXT') {
+        @if (section.sectionType === 'TEXT') {
           <div [innerHTML]="section.text" class="preview-text"></div>
         } @else {
-          <img [src]="'data:image/png;base64,' + section.image_base_64"/>
-          <div class="image-title">{{ section.image_title }}</div>
+          <img [src]="'data:image/png;base64,' + section.imageBase64"/>
+          <div class="image-title">{{ section.imageTitle }}</div>
         }
       }
     </div>
@@ -42,9 +42,9 @@
     @if (areCommentsVisible) {
       @for (comment of article.comments; track comment.id) {
         <div class="comment">
-          <div class="comment-author">{{ comment.author.display_name }}
+          <div class="comment-author">{{ comment.author.displayName }}
             <div
-              class="datetime">{{ ISOdateStringToLocaleDate(comment.inserted_at) }}
+              class="datetime">{{ ISOdateStringToLocaleDate(comment.insertedAt) }}
             </div>
           </div>
           <div class="comment-text">{{ comment.text }}</div>

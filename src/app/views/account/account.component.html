@@ -55,28 +55,74 @@
       <form [formGroup]="passwordFormGroup">
         <mat-form-field appearance="outline">
           <mat-label>old password</mat-label>
-          <input [formControl]="passwordFormGroup.controls.oldPassword" matInput placeholder="old password"
-                 type="password">
+          <input #oldPasswordInput [formControl]="passwordFormGroup.controls.oldPassword" matInput
+                 placeholder="old password" type="password">
+          <div class="mat-suffix-div" matSuffix>
+            @if (!isOldPasswordCleartext) {
+              <img
+                alt="create"
+                height="24" width="24" ngSrc="/assets/visibility_off_FILL0_wght400_GRAD0_opsz24.svg"
+                (click)="showOldPassword()"
+                class="clickable"
+              />
+            } @else {
+              <img
+                alt="create"
+                height="24" width="24" ngSrc="/assets/visibility_FILL0_wght400_GRAD0_opsz24.svg"
+                (click)="hideOldPassword()"
+                class="clickable"
+              />
+            }
+          </div>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>new password</mat-label>
-          <input [formControl]="passwordFormGroup.controls.newPassword" matInput placeholder="new password"
-                 type="password">
+          <input #newPasswordInput [formControl]="passwordFormGroup.controls.newPassword" matInput
+                 placeholder="new password" type="password">
+          <div class="mat-suffix-div" matSuffix>
+            @if (!isNewPasswordCleartext) {
+              <img
+                alt="create"
+                height="24" width="24" ngSrc="/assets/visibility_off_FILL0_wght400_GRAD0_opsz24.svg"
+                (click)="showNewPassword()"
+                class="clickable"
+              />
+            } @else {
+              <img
+                alt="create"
+                height="24" width="24" ngSrc="/assets/visibility_FILL0_wght400_GRAD0_opsz24.svg"
+                (click)="hideNewPassword()"
+                class="clickable"
+              />
+            }
+          </div>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>repeat new password</mat-label>
-          <input [formControl]="passwordFormGroup.controls.newPasswordRepeated" matInput
-                 placeholder="repeat new password"
-                 type="password">
+          <input #newPasswordRepeatedInput [formControl]="passwordFormGroup.controls.newPasswordRepeated"
+                 matInput
+                 placeholder="repeat new password" type="password">
+          <div class="mat-suffix-div" matSuffix>
+            @if (!isNewPasswordRepeatedCleartext) {
+              <img
+                alt="create"
+                height="24" width="24" ngSrc="/assets/visibility_off_FILL0_wght400_GRAD0_opsz24.svg"
+                (click)="showNewPasswordRepeated()"
+                class="clickable"
+              />
+            } @else {
+              <img
+                alt="create"
+                height="24" width="24" ngSrc="/assets/visibility_FILL0_wght400_GRAD0_opsz24.svg"
+                (click)="hideNewPasswordRepeated()"
+                class="clickable"
+              />
+            }
+          </div>
         </mat-form-field>
         <button (click)="updatePassword()" [disabled]="!canUpdatePassword()" mat-raised-button type="button">update
           password
         </button>
-        @if (passwordChangeResponseMessage !== '') {
-          <div class="response-message">
-            {{ passwordChangeResponseMessage }}
-          </div>
-        }
 
       </form>
 

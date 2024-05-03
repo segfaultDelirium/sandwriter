@@ -4,7 +4,20 @@
 <div class="panes-wrapper">
   <div class="pane" id="article-editor">
     <h1>
+      <div id="dummy-div" style="visibility: hidden">x</div>
       <div>Editor</div>
+      <div class="section-adding-buttons">
+        <div (click)="addTextSection()" class="add-section-button clickable">
+          <img src="/assets/add_FILL0_wght400_GRAD0_opsz24.svg">
+          <img src="/assets/notes_FILL0_wght400_GRAD0_opsz24.svg">
+        </div>
+        <input #fileUpload (change)="uploadImage($event)"
+               accept="image/*" class="file-input" type="file">
+        <div (click)="fileUpload.click()" class="add-section-button clickable">
+          <img src="/assets/add_FILL0_wght400_GRAD0_opsz24.svg">
+          <img src="/assets/image_FILL0_wght400_GRAD0_opsz24.svg">
+        </div>
+      </div>
     </h1>
     <div class="pane-content">
       <mat-form-field appearance="outline" class="article-title-form-field">

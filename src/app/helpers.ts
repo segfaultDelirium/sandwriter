@@ -15,13 +15,13 @@ export function getCurrentISODateString() {
 
 export function articleToArticleHeader(article: ArticleWithoutTextAndComments) {
   const articleHeader: ArticleHeader = {
-    article_id: article.id,
-    display_name: article.author.display_name ?? '',
-    is_upvoted_by_current_user: article.is_upvoted_by_current_user,
-    is_downvoted_by_current_user: article.is_downvoted_by_current_user,
-    inserted_at: article.inserted_at,
-    upvotes: article.upvotes,
-    downvotes: article.downvotes,
+    articleId: article.id,
+    author: article.author,
+    isLikedByCurrentUser: article.isLikedByCurrentUser,
+    isDislikedByCurrentUser: article.isDislikedByCurrentUser,
+    insertedAt: article.insertedAt,
+    likes: article.likes,
+    dislikes: article.dislikes,
   };
   return articleHeader;
 }

@@ -4,15 +4,16 @@ import { ArticleService } from '../article.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../material.module';
+import { User } from '../../../services/authentication.service';
 
 export type ArticleHeader = {
-  article_id: string | null;
-  display_name: string;
-  is_upvoted_by_current_user: boolean;
-  is_downvoted_by_current_user: boolean;
-  inserted_at: string;
-  upvotes: number;
-  downvotes: number;
+  articleId: string | null;
+  author: User;
+  likes: number;
+  dislikes: number;
+  isLikedByCurrentUser: boolean;
+  isDislikedByCurrentUser: boolean;
+  insertedAt: string;
 };
 
 @Component({
@@ -27,10 +28,10 @@ export class AuthorComponent implements OnChanges {
   @Input() isLikeDislikeDisabled: boolean = false;
 
   // it has to be this retarded because angular does not detect articleHeader changes either by modifying object or by reassignment
-  is_upvoted_by_current_user: boolean = false;
-  is_downvoted_by_current_user: boolean = false;
-  upvotes: number = 0;
-  downvotes: number = 0;
+  isLikedByCurrentUser: boolean = false;
+  isDislikedByCurrentUser: boolean = false;
+  likes: number = 0;
+  dislikes: number = 0;
 
   readonly ISOdateStringToLocaleDate = ISOdateStringToLocaleDate;
 
@@ -39,11 +40,13 @@ export class AuthorComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     const articleHeaderChanges = changes['articleHeader'];
     if (articleHeaderChanges && articleHeaderChanges.firstChange) {
-      const x = articleHeaderChanges.currentValue;
-      this.is_upvoted_by_current_user = x.is_upvoted_by_current_user;
-      this.is_downvoted_by_current_user = x.is_downvoted_by_current_user;
-      this.upvotes = x.upvotes;
-      this.downvotes = x.downvotes;
+      const x = articleHeaderChanges.currentValue as ArticleHeader;
+      if (x !== null) {
+        this.isLikedByCurrentUser = x.isLikedByCurrentUser;
+        this.isDislikedByCurrentUser = x.isDislikedByCurrentUser;
+        this.likes = x.likes;
+        this.dislikes = x.dislikes;
+      }
     }
   }
 
@@ -58,29 +61,27 @@ export class AuthorComponent implements OnChanges {
       return;
     }
 
-    const new_is_upvoted_by_current_user = !this.is_upvoted_by_current_user;
+    const newIsLikedByCurrentUser = !this.isLikedByCurrentUser;
 
-    const newUpvotes = this.upvotes + (new_is_upvoted_by_current_user ? 1 : -1);
+    const newLikes = this.likes + (newIsLikedByCurrentUser ? 1 : -1);
 
-    const new_is_downvoted_by_current_user =
-      new_is_upvoted_by_current_user && this.is_downvoted_by_current_user
+    const newIsDislikedByCurrentUser =
+      newIsLikedByCurrentUser && this.isDislikedByCurrentUser
         ? false
-        : this.is_downvoted_by_current_user;
+        : this.isDislikedByCurrentUser;
 
-    const newDownvotes =
-      this.downvotes +
-      (new_is_upvoted_by_current_user && this.is_downvoted_by_current_user
-        ? -1
-        : 0);
+    const newDislikes =
+      this.dislikes +
+      (newIsLikedByCurrentUser && this.isDislikedByCurrentUser ? -1 : 0);
 
-    this.is_upvoted_by_current_user = new_is_upvoted_by_current_user;
-    this.is_downvoted_by_current_user = new_is_downvoted_by_current_user;
-    this.upvotes = newUpvotes;
-    this.downvotes = newDownvotes;
+    this.isLikedByCurrentUser = newIsLikedByCurrentUser;
+    this.isDislikedByCurrentUser = newIsDislikedByCurrentUser;
+    this.likes = newLikes;
+    this.dislikes = newDislikes;
 
-    if (this.articleHeader.article_id !== null) {
+    if (this.articleHeader.articleId !== null) {
       this.articleService
-        .likeArticle(this.articleHeader.article_id)
+        .likeArticle(this.articleHeader.articleId)
         .subscribe((x) => {
           // console.log(x);
         });
@@ -98,33 +99,30 @@ export class AuthorComponent implements OnChanges {
       return;
     }
 
-    const new_is_downvoted_by_current_user = !this.is_downvoted_by_current_user;
+    const newIsDislikedByCurrentUser = !this.isDislikedByCurrentUser;
 
-    const newDownvotes =
-      this.downvotes + (new_is_downvoted_by_current_user ? 1 : -1);
+    const newDislikes = this.dislikes + (newIsDislikedByCurrentUser ? 1 : -1);
 
-    const new_is_upvoted_by_current_user =
-      new_is_downvoted_by_current_user && this.is_upvoted_by_current_user
+    const newIsLikedByCurrentUser =
+      newIsDislikedByCurrentUser && this.isLikedByCurrentUser
         ? false
-        : this.is_upvoted_by_current_user;
+        : this.isLikedByCurrentUser;
 
-    const newUpvotes =
-      this.upvotes +
-      (new_is_downvoted_by_current_user && this.is_upvoted_by_current_user
-        ? -1
-        : 0);
+    const newLikes =
+      this.likes +
+      (newIsDislikedByCurrentUser && this.isLikedByCurrentUser ? -1 : 0);
 
-    if (this.articleHeader.article_id !== null) {
+    if (this.articleHeader.articleId !== null) {
       this.articleService
-        .dislikeArticle(this.articleHeader.article_id)
+        .dislikeArticle(this.articleHeader.articleId)
         .subscribe((x) => {
           // console.log(x);
         });
     }
 
-    this.is_upvoted_by_current_user = new_is_upvoted_by_current_user;
-    this.is_downvoted_by_current_user = new_is_downvoted_by_current_user;
-    this.upvotes = newUpvotes;
-    this.downvotes = newDownvotes;
+    this.isLikedByCurrentUser = newIsLikedByCurrentUser;
+    this.isDislikedByCurrentUser = newIsDislikedByCurrentUser;
+    this.likes = newLikes;
+    this.dislikes = newDislikes;
   }
 }
