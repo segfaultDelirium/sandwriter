@@ -4,7 +4,7 @@
       <div class="title">
         <h1>{{ article.title }}</h1>
       </div>
-      <app-author [articleHeader]="articleToArticleHeader(article)"></app-author>
+      <app-author [article]="article"></app-author>
     </div>
     <div>
       @for (section of article.sections; track section; let index = $index) {

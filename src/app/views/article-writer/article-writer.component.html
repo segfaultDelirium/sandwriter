@@ -78,7 +78,7 @@
         <div class="title">
           <h1>{{ articleTitle }}</h1>
         </div>
-        <app-author [articleHeader]="getArticleHeader()" [isLikeDislikeDisabled]="true"></app-author>
+        <app-author [article]="getArticleHeader()" [isLikeDislikeDisabled]="true"></app-author>
       </div>
       <div>
         @for (section of sections; track section; let index = $index) {

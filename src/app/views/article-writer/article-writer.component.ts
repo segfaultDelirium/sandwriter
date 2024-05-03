@@ -2,17 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../material.module';
 import { ArticleService } from '../article/article.service';
-import {
-  ArticleHeader,
-  AuthorComponent,
-} from '../article/author/author.component';
+import { AuthorComponent } from '../article/author/author.component';
 import { Subscription } from 'rxjs';
 import {
   AuthenticationService,
   User,
 } from '../../services/authentication.service';
 import { getCurrentISODateString } from '../../helpers';
-import { SectionType } from '../article/types';
+import { ArticleWithoutTextAndComments, SectionType } from '../article/types';
 import { Router } from '@angular/router';
 
 const emptyTextSection: Section = {
@@ -162,14 +159,19 @@ export class ArticleWriterComponent implements OnInit {
       return null;
     }
     // const display_name = this.userData ? this.userData!.displayName ?? '' : '';
-    const articleHeader: ArticleHeader = {
-      articleId: null,
+    const articleHeader: ArticleWithoutTextAndComments = {
+      id: '',
+      title: '',
+      slug: '',
       author: this.userData,
       isLikedByCurrentUser: false,
       isDislikedByCurrentUser: false,
       insertedAt: getCurrentISODateString(),
+      updatedAt: getCurrentISODateString(),
+      deletedAt: null,
       likes: 0,
       dislikes: 0,
+      commentCount: 0,
     };
     return articleHeader;
   }

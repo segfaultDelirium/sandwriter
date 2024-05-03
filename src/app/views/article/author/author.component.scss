@@ -5,11 +5,6 @@
 .likes-dislikes {
   display: flex;
   align-items: center;
-
-  img {
-    margin-right: 10px;
-    margin-left: 3px;
-  }
 }
 
 .clicked {
@@ -19,4 +14,20 @@
 .datetime {
   font-size: 0.9em;
   color: grey;
+}
+
+.comment-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    margin-right: 10px;
+    margin-left: 3px;
+  }
+}
+
+
+button {
+  padding-left: 0px !important;
 }

@@ -1,7 +1,7 @@
-@if (articleHeader) {
+@if (article) {
   <div>
-    {{ articleHeader.author.displayName }} - <span
-    class="datetime">{{ ISOdateStringToLocaleDate(articleHeader.insertedAt) }}</span>
+    {{ article.author.displayName }} - <span
+    class="datetime">{{ ISOdateStringToLocaleDate(article.insertedAt) }}</span>
   </div>
   <div class="likes-dislikes">
     {{ likes }}
@@ -18,6 +18,11 @@
     >
       <mat-icon>thumb_down</mat-icon>
     </button>
+
+    <div class="comment-count">
+      {{ article.commentCount }}
+      <mat-icon>comment</mat-icon>
+    </div>
   </div>
 
 }

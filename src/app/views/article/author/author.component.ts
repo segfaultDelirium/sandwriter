@@ -4,17 +4,7 @@ import { ArticleService } from '../article.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../material.module';
-import { User } from '../../../services/authentication.service';
-
-export type ArticleHeader = {
-  articleId: string | null;
-  author: User;
-  likes: number;
-  dislikes: number;
-  isLikedByCurrentUser: boolean;
-  isDislikedByCurrentUser: boolean;
-  insertedAt: string;
-};
+import { ArticleWithoutTextAndComments } from '../types';
 
 @Component({
   selector: 'app-author',
@@ -24,7 +14,7 @@ export type ArticleHeader = {
   styleUrl: './author.component.scss',
 })
 export class AuthorComponent implements OnChanges {
-  @Input() articleHeader: ArticleHeader | null = null;
+  @Input() article: ArticleWithoutTextAndComments | null = null;
   @Input() isLikeDislikeDisabled: boolean = false;
 
   // it has to be this retarded because angular does not detect articleHeader changes either by modifying object or by reassignment
@@ -40,7 +30,8 @@ export class AuthorComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     const articleHeaderChanges = changes['articleHeader'];
     if (articleHeaderChanges && articleHeaderChanges.firstChange) {
-      const x = articleHeaderChanges.currentValue as ArticleHeader;
+      const x =
+        articleHeaderChanges.currentValue as ArticleWithoutTextAndComments;
       if (x !== null) {
         this.isLikedByCurrentUser = x.isLikedByCurrentUser;
         this.isDislikedByCurrentUser = x.isDislikedByCurrentUser;
@@ -56,7 +47,7 @@ export class AuthorComponent implements OnChanges {
       console.log('isLikeDislikeDisabled true');
       return;
     }
-    if (this.articleHeader === null) {
+    if (this.article === null) {
       console.log('articleHeader is null');
       return;
     }
@@ -79,12 +70,10 @@ export class AuthorComponent implements OnChanges {
     this.likes = newLikes;
     this.dislikes = newDislikes;
 
-    if (this.articleHeader.articleId !== null) {
-      this.articleService
-        .likeArticle(this.articleHeader.articleId)
-        .subscribe((x) => {
-          // console.log(x);
-        });
+    if (this.article.id !== null) {
+      this.articleService.likeArticle(this.article.id).subscribe((x) => {
+        // console.log(x);
+      });
     }
   }
 
@@ -94,7 +83,7 @@ export class AuthorComponent implements OnChanges {
       console.log('isLikeDislikeDisabled true');
       return;
     }
-    if (this.articleHeader === null) {
+    if (this.article === null) {
       console.log('articleHeader is null');
       return;
     }
@@ -112,12 +101,10 @@ export class AuthorComponent implements OnChanges {
       this.likes +
       (newIsDislikedByCurrentUser && this.isLikedByCurrentUser ? -1 : 0);
 
-    if (this.articleHeader.articleId !== null) {
-      this.articleService
-        .dislikeArticle(this.articleHeader.articleId)
-        .subscribe((x) => {
-          // console.log(x);
-        });
+    if (this.article.id !== null) {
+      this.articleService.dislikeArticle(this.article.id).subscribe((x) => {
+        // console.log(x);
+      });
     }
 
     this.isLikedByCurrentUser = newIsLikedByCurrentUser;

@@ -54,6 +54,7 @@ export interface ArticleWithoutTextAndComments {
   dislikes: number;
   isLikedByCurrentUser: boolean;
   isDislikedByCurrentUser: boolean;
+  commentCount: number;
 
   insertedAt: string;
   updatedAt: string;

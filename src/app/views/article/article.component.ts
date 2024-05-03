@@ -5,10 +5,7 @@ import { ArticleService } from './article.service';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AuthorComponent } from './author/author.component';
-import {
-  articleToArticleHeader,
-  ISOdateStringToLocaleDate,
-} from '../../helpers';
+import { ISOdateStringToLocaleDate } from '../../helpers';
 import { Article } from './types';
 import { ActivatedRoute } from '@angular/router';
 
@@ -30,7 +27,6 @@ export class ArticleComponent implements OnInit {
   commentInput: string = '';
   isCommentInputVisible = false;
   readonly ISOdateStringToLocaleDate = ISOdateStringToLocaleDate;
-  protected readonly articleToArticleHeader = articleToArticleHeader;
 
   constructor(
     private articleService: ArticleService,
