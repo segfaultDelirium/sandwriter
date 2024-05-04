@@ -4,13 +4,13 @@ import { ArticleListComponent } from './views/article-list/article-list.componen
 import { ArticleComponent } from './views/article/article.component';
 import { ArticleWriterComponent } from './views/article-writer/article-writer.component';
 import { authGuard } from './guards/auth.guard';
+import { HomeComponent } from './views/home/home.component';
 
 export const routes: Routes = [
-  // {
-  //   path: '',
-  //   // component: HomeComponent,
-  //   // redirectTo: 'articles',
-  // },
+  {
+    path: '',
+    component: HomeComponent,
+  },
   {
     path: 'account',
     component: AccountComponent,
@@ -31,7 +31,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'articles',
+    redirectTo: '',
     pathMatch: 'full',
   },
 ];
