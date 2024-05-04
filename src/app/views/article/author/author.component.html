@@ -6,14 +6,14 @@
   <div class="likes-dislikes">
     {{ likes }}
     <button mat-icon-button (click)="toggleLikeArticle()"
-            [disabled]="isLikeDislikeDisabled"
+            [disabled]="isLikeDislikeDisabled || !isUserLoggedIn()"
             [class]="isLikedByCurrentUser ? 'clicked' : ''"
     >
       <mat-icon class="material-symbols-outlined">thumb_up</mat-icon>
     </button>
     {{ dislikes }}
     <button mat-icon-button (click)="toggleDislikeArticle()"
-            [disabled]="isLikeDislikeDisabled"
+            [disabled]="isLikeDislikeDisabled || !isUserLoggedIn()"
             [class]="isDislikedByCurrentUser ? 'clicked' : ''"
     >
       <mat-icon class="material-symbols-outlined">thumb_down</mat-icon>
@@ -21,7 +21,7 @@
 
     <div class="comment-count">
       {{ article.commentCount }}
-      <button mat-icon-button (click)="emitCommentIconClick()">
+      <button mat-icon-button [disabled]="isCommentButtonDisabled" (click)="emitCommentIconClick()">
         <mat-icon class="material-symbols-outlined">comment</mat-icon>
       </button>
     </div>

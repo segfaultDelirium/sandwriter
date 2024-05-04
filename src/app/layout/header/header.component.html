@@ -7,7 +7,9 @@
     </div>
   </div>
   <div class="side side-right">
-    <a mat-button routerLink="articles/write">Write article</a>
+    @if (userData | async) {
+      <a mat-button routerLink="articles/write">Write article</a>
+    }
     <a mat-button routerLink="articles">Articles</a>
     <div style="margin-left: 20px;"></div>
     @if (userData | async) {

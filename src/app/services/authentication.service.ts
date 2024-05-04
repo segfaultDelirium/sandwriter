@@ -30,6 +30,7 @@ export interface UserModifiableFields {
 export class AuthenticationService {
   _userDataSource = new BehaviorSubject<User | null>(null);
   userDataMessage$ = this._userDataSource.asObservable();
+  isLoggedIn = false;
 
   constructor(private httpService: HttpService) {}
 
@@ -76,6 +77,7 @@ export class AuthenticationService {
 
   private clearUserDataPipe(x?: any) {
     this._userDataSource.next(null);
+    this.isLoggedIn = false;
     return x;
   }
 
@@ -88,6 +90,7 @@ export class AuthenticationService {
 
   private setUserData(userData: User) {
     this._userDataSource.next(userData);
+    this.isLoggedIn = true;
   }
 }
 

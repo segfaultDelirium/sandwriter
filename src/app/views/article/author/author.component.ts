@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../material.module';
 import { ArticleWithoutTextAndComments } from '../types';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
   selector: 'app-author',
@@ -23,6 +24,7 @@ import { ArticleWithoutTextAndComments } from '../types';
 export class AuthorComponent implements OnChanges {
   @Input() article: ArticleWithoutTextAndComments | null = null;
   @Input() isLikeDislikeDisabled: boolean = false;
+  @Input() isCommentButtonDisabled: boolean = false;
   @Output() commentIconClicked = new EventEmitter();
 
   // it has to be this retarded because angular does not detect articleHeader changes either by modifying object or by reassignment
@@ -33,7 +35,10 @@ export class AuthorComponent implements OnChanges {
 
   readonly ISOdateStringToLocaleDate = ISOdateStringToLocaleDate;
 
-  constructor(private articleService: ArticleService) {}
+  constructor(
+    private articleService: ArticleService,
+    private auth: AuthenticationService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     const articleChanges = changes['article'];
@@ -117,5 +122,9 @@ export class AuthorComponent implements OnChanges {
 
   emitCommentIconClick() {
     this.commentIconClicked.emit();
+  }
+
+  isUserLoggedIn() {
+    return this.auth.isLoggedIn;
   }
 }

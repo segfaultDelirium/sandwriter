@@ -32,7 +32,7 @@
     <div class="comment-input">
       <mat-form-field appearance="outline">
         <mat-label>your comment</mat-label>
-        <textarea [(ngModel)]="commentInput" matInput
+        <textarea [(ngModel)]="commentInput" [disabled]="user === null" matInput
                   placeholder="your comment"></textarea>
         <div class="button-wrapper">
           <button (click)="sendComment()" [disabled]="commentInput === ''" mat-raised-button>Comment</button>
