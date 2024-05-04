@@ -1,6 +1,6 @@
 :host {
   width: 100%;
-  height: calc(100vh - 150px);
+  //height: calc(100vh - 150px);
 }
 
 
@@ -18,7 +18,7 @@
   .pane {
     text-align: center;
 
-    height: calc(100vh - 150px);
+    //height: calc(100vh - 150px);
     max-width: 666px;
 
     //.pane-content {
@@ -53,14 +53,13 @@
 
   #article-preview {
     height: auto;
-    min-height: calc(100vh - 150px);
+    //min-height: calc(100vh - 150px);
 
     .pane-content {
       height: auto;
-      min-height: calc(100vh - 200px);
+      //min-height: calc(100vh - 200px);
     }
-
-    margin-bottom: 100px;
+    
 
     img {
       max-width: 100%;

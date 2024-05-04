@@ -3,6 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .host {
@@ -13,7 +14,6 @@
 
   .article-part {
     width: 666px;
-    margin-bottom: 100px;
 
     img {
       max-width: 100%;
@@ -83,14 +83,8 @@
 }
 
 
-.comment-button-and-add-icon {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  .add-icon {
-    margin-left: 20px;
-  }
+.clicked {
+  filter: invert(65%) sepia(58%) saturate(1360%) hue-rotate(359deg) brightness(100%) contrast(105%);
 }
 
 .comment-input {
@@ -108,33 +102,9 @@
   }
 }
 
-.comment-actions {
+app-comment {
   display: flex;
-  align-items: center;
-
-  button {
-    margin-right: 10px;
-  }
-
-  mat-icon {
-    //width: 20px;
-    //height: 20px;
-  }
+  margin-left: 20px;
 }
-
-.reply-box {
-  mat-form-field {
-    width: 100%;
-  }
-
-  textarea {
-    width: 100%;
-  }
-}
-
-.clicked {
-  filter: invert(65%) sepia(58%) saturate(1360%) hue-rotate(359deg) brightness(100%) contrast(105%);
-}
-
 
 // clicked like or dislike button color: #FFAB00

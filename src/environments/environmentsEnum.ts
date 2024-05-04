@@ -6,6 +6,6 @@ export type Environment = {
 };
 
 export enum ApiServerUrl {
-  DEVELOPMENT = 'https://localhost:4000/api',
+  DEVELOPMENT = 'http://localhost:4000/api/',
   PRODUCTION = 'http://139.162.175.250:4000/api/',
 }

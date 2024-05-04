@@ -1,0 +1,83 @@
+@if (comment && article) {
+  <div class="comment">
+    <div class="comment-author">
+      {{ comment.author.displayName }}
+      @if (comment.author.id == article.author.id) {
+        <img class="clickable" src="/assets/signature_FILL0_wght400_GRAD0_opsz24.svg">
+      }
+      <div
+        class="datetime">{{ ISOdateStringToLocaleDate(comment.insertedAt) }}
+      </div>
+    </div>
+    <div class="comment-text">
+            <span class="comment-text">
+              @if (comment.isShortenedTextVisible) {
+                {{ getShortenedCommentText(comment.text) }}
+              } @else {
+                {{ comment.text }}
+              }
+            </span>
+      <span *ngIf="comment.text.length > 200" (click)="toggleShortenedTextView(comment)"
+            class="read-more-show-less clickable">
+              <br/>
+        @if (comment.isShortenedTextVisible) {
+          Read more
+        } @else {
+          Show less
+        }
+            </span>
+    </div>
+    <div class="comment-actions">
+      {{ comment.likes }}
+      <button mat-icon-button (click)="toggleLikeComment(comment)"
+              [disabled]="!isUserLoggedIn()"
+              [class]="comment.isLikedByCurrentUser ? 'clicked' : ''"
+      >
+        <mat-icon class="material-symbols-outlined">thumb_up</mat-icon>
+      </button>
+      {{ comment.dislikes }}
+      <button mat-icon-button (click)="toggleDislikeComment(comment)"
+              [disabled]="!isUserLoggedIn()"
+              [class]="comment.isDislikedByCurrentUser ? 'clicked' : ''"
+      >
+        <mat-icon class="material-symbols-outlined">thumb_down</mat-icon>
+      </button>
+      <button mat-icon-button (click)="toggleOpenReplyBoxBelow(comment)"
+              [disabled]="!isUserLoggedIn()"
+      >
+        <mat-icon class="material-symbols-outlined">comment</mat-icon>
+      </button>
+    </div>
+    @if (comment.hasOpenReplyBox) {
+      <div class="reply-box">
+        <mat-form-field appearance="outline">
+          <mat-label>your reply</mat-label>
+          <textarea [(ngModel)]="comment.replyText" matInput
+                    placeholder="your reply"></textarea>
+          <div class="comment-button-wrapper">
+            <button (click)="sendReply(comment)" [disabled]="comment.replyText === ''" mat-raised-button>
+              Comment
+            </button>
+          </div>
+        </mat-form-field>
+      </div>
+    }
+    @if (comment.replies.length > 0) {
+      <div class="expand-replies-div-wrapper">
+        <div class="expand-replies-div clickable" (click)="toggleRepliesVisibility(comment)">
+          @if (comment.areRepliesVisible) {
+            <mat-icon class="material-symbols-outlined">expand_less</mat-icon>
+          } @else {
+            <mat-icon class="material-symbols-outlined">expand_more</mat-icon>
+          }
+          {{ comment.replies.length }} replies
+        </div>
+      </div>
+      <div *ngIf="comment.areRepliesVisible">
+        @for (reply of comment.replies; track reply.id) {
+          <app-comment [comment]="reply" [user]="user" [article]="article"></app-comment>
+        }
+      </div>
+    }
+  </div>
+}

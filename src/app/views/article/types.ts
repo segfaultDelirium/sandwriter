@@ -3,8 +3,7 @@ import { User } from '../../services/authentication.service';
 export type Comment = {
   id: string;
   author: User;
-  replies: Comment[];
-  // replies_to: string | null; // comment id if is reply to another comment or null.
+  repliesTo: string | null;
   text: string;
 
   likes: number;
@@ -16,8 +15,13 @@ export type Comment = {
   updatedAt: string;
   deletedAt: string | null;
 
+  // properties added on frontend side
+  replies: Comment[];
   hasOpenReplyBox: boolean;
   replyText: string;
+  isShortenedTextVisible: boolean;
+  areRepliesVisible: boolean;
+  level: number;
 };
 
 export type SectionType = 'TEXT' | 'IMAGE';

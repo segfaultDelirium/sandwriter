@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { ISOdateStringToLocaleDate } from '../../../helpers';
 import { ArticleService } from '../article.service';
 import { CommonModule } from '@angular/common';
@@ -16,6 +23,7 @@ import { ArticleWithoutTextAndComments } from '../types';
 export class AuthorComponent implements OnChanges {
   @Input() article: ArticleWithoutTextAndComments | null = null;
   @Input() isLikeDislikeDisabled: boolean = false;
+  @Output() commentIconClicked = new EventEmitter();
 
   // it has to be this retarded because angular does not detect articleHeader changes either by modifying object or by reassignment
   isLikedByCurrentUser: boolean = false;
@@ -41,13 +49,10 @@ export class AuthorComponent implements OnChanges {
   }
 
   toggleLikeArticle() {
-    // console.log('hello from toggleLikeArticle');
     if (this.isLikeDislikeDisabled) {
-      // console.log('isLikeDislikeDisabled true');
       return;
     }
     if (this.article === null) {
-      // console.log('articleHeader is null');
       return;
     }
 
@@ -77,13 +82,11 @@ export class AuthorComponent implements OnChanges {
   }
 
   toggleDislikeArticle() {
-    // console.log('hello from toggleDislikeArticle');
     if (this.isLikeDislikeDisabled) {
       console.log('isLikeDislikeDisabled true');
       return;
     }
     if (this.article === null) {
-      // console.log('articleHeader is null');
       return;
     }
 
@@ -110,5 +113,9 @@ export class AuthorComponent implements OnChanges {
     this.isDislikedByCurrentUser = newIsDislikedByCurrentUser;
     this.likes = newLikes;
     this.dislikes = newDislikes;
+  }
+
+  emitCommentIconClick() {
+    this.commentIconClicked.emit();
   }
 }

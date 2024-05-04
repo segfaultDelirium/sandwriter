@@ -21,7 +21,7 @@
 
     <div class="comment-count">
       {{ article.commentCount }}
-      <button mat-icon-button [disabled]="true">
+      <button mat-icon-button (click)="emitCommentIconClick()">
         <mat-icon class="material-symbols-outlined">comment</mat-icon>
       </button>
     </div>

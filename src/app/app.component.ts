@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './layout/header/header.component';
 import { MaterialModule } from './material.module';
 import { AuthenticationService } from './services/authentication.service';
+import { FooterComponent } from './layout/footer/footer.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, MaterialModule],
+  imports: [RouterOutlet, HeaderComponent, MaterialModule, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })

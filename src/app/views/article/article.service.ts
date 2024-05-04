@@ -5,20 +5,47 @@ import { Article, ArticleWithoutTextAndComments, Comment } from './types';
 import { Section } from '../article-writer/article-writer.component';
 import { HttpService } from '../../services/http.service';
 
-function addHasOpenReplyBoxProperty(comment: Comment): Comment {
+function addCommentProperties(comment: Comment): Comment {
   return {
     ...comment,
     hasOpenReplyBox: false,
     replyText: '',
+    isShortenedTextVisible: true,
+    areRepliesVisible: false,
   };
 }
 
-function addHasOpenReplyBoxPropertyToAllCommentsInArticle(
-  article: Article,
-): Article {
+function addCommentPropertiesToAllCommentsInArticle(article: Article): Article {
   return {
     ...article,
-    comments: article.comments.map(addHasOpenReplyBoxProperty),
+    comments: article.comments.map(addCommentProperties),
+  };
+}
+
+function addRepliesRec(comment: Comment, replies: Comment[]): Comment {
+  const repliesToThisComment = replies.filter(
+    (reply) => reply.repliesTo === comment.id,
+  );
+  return {
+    ...comment,
+    replies: repliesToThisComment.map((reply) => addRepliesRec(reply, replies)),
+  };
+}
+
+function makeCommentsHierarchical(article: Article) {
+  const topComments = article.comments.filter(
+    (comment) => comment.repliesTo === null,
+  );
+  const replies = article.comments.filter(
+    (comment) => comment.repliesTo !== null,
+  );
+
+  const topCommentsWithReplies = topComments.map((comment) => {
+    return addRepliesRec(comment, replies);
+  });
+  return {
+    ...article,
+    comments: topCommentsWithReplies,
   };
 }
 
@@ -33,13 +60,18 @@ export class ArticleService {
       this.httpService.get(
         `${SERVER_URL}articles/${slug}`,
       ) as Observable<Article>
-    ).pipe(map(addHasOpenReplyBoxPropertyToAllCommentsInArticle));
+    ).pipe(
+      map(addCommentPropertiesToAllCommentsInArticle),
+      map(makeCommentsHierarchical),
+    );
   }
 
   sendComment(articleId: string, commentText: string) {
-    return this.httpService.post(`${SERVER_URL}comments/${articleId}`, {
-      comment: commentText,
-    }) as Observable<Comment>;
+    return (
+      this.httpService.post(`${SERVER_URL}comments/${articleId}`, {
+        comment: commentText,
+      }) as Observable<Comment>
+    ).pipe(map(addCommentProperties));
   }
 
   sendReplyToComment(
@@ -47,12 +79,14 @@ export class ArticleService {
     commentId: string,
     commentText: string,
   ) {
-    return this.httpService.post(
-      `${SERVER_URL}comments/${articleId}/reply-to/${commentId}`,
-      {
-        comment: commentText,
-      },
-    ) as Observable<Comment>;
+    return (
+      this.httpService.post(
+        `${SERVER_URL}comments/${articleId}/reply-to/${commentId}`,
+        {
+          comment: commentText,
+        },
+      ) as Observable<Comment>
+    ).pipe(map(addCommentProperties));
   }
 
   likeArticle(articleId: string) {
