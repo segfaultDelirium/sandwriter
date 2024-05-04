@@ -42,12 +42,50 @@
     @if (areCommentsVisible) {
       @for (comment of article.comments; track comment.id) {
         <div class="comment">
-          <div class="comment-author">{{ comment.author.displayName }}
+          <div class="comment-author">
+            {{ comment.author.displayName }}
+            @if (comment.author.id == article.author.id) {
+              <img class="clickable" src="/assets/signature_FILL0_wght400_GRAD0_opsz24.svg">
+            }
             <div
               class="datetime">{{ ISOdateStringToLocaleDate(comment.insertedAt) }}
             </div>
           </div>
           <div class="comment-text">{{ comment.text }}</div>
+          <div class="comment-actions">
+            {{ comment.likes }}
+            <button mat-icon-button (click)="toggleLikeComment(comment)"
+                    [disabled]="!isUserLoggedIn()"
+                    [class]="comment.isLikedByCurrentUser ? 'clicked' : ''"
+            >
+              <mat-icon class="material-symbols-outlined">thumb_up</mat-icon>
+            </button>
+            {{ comment.dislikes }}
+            <button mat-icon-button (click)="toggleDislikeComment(comment)"
+                    [disabled]="!isUserLoggedIn()"
+                    [class]="comment.isDislikedByCurrentUser ? 'clicked' : ''"
+            >
+              <mat-icon class="material-symbols-outlined">thumb_down</mat-icon>
+            </button>
+            <button mat-icon-button (click)="toggleOpenReplyBoxBelow(comment)"
+                    [disabled]="!isUserLoggedIn()"
+            >
+              <mat-icon class="material-symbols-outlined">comment</mat-icon>
+            </button>
+          </div>
+          @if (comment.hasOpenReplyBox) {
+            <div class="reply-box">
+              <mat-form-field appearance="outline">
+                <mat-label>your reply</mat-label>
+                <textarea [(ngModel)]="comment.replyText" matInput
+                          placeholder="your reply"></textarea>
+                <div class="button-wrapper">
+                  <button (click)="sendReply(comment)" [disabled]="comment.replyText === ''" mat-raised-button>Comment
+                  </button>
+                </div>
+              </mat-form-field>
+            </div>
+          }
           <hr>
         </div>
       }

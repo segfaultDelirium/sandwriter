@@ -2,9 +2,7 @@ import { User } from '../../services/authentication.service';
 
 export type Comment = {
   id: string;
-  author: {
-    displayName: string;
-  };
+  author: User;
   replies: Comment[];
   // replies_to: string | null; // comment id if is reply to another comment or null.
   text: string;
@@ -17,6 +15,9 @@ export type Comment = {
   insertedAt: string;
   updatedAt: string;
   deletedAt: string | null;
+
+  hasOpenReplyBox: boolean;
+  replyText: string;
 };
 
 export type SectionType = 'TEXT' | 'IMAGE';

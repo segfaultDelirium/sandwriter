@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MaterialModule } from '../../material.module';
 import { CommonModule } from '@angular/common';
 import { ArticleService } from './article.service';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { AuthorComponent } from './author/author.component';
 import { ISOdateStringToLocaleDate } from '../../helpers';
-import { Article } from './types';
+import { Article, Comment } from './types';
 import { ActivatedRoute } from '@angular/router';
+import {
+  AuthenticationService,
+  User,
+} from '../../services/authentication.service';
 
 @Component({
   selector: 'app-article',
@@ -16,21 +20,22 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './article.component.html',
   styleUrl: './article.component.scss',
 })
-export class ArticleComponent implements OnInit {
-  // sampleArticle
-  // article: Article | null = sampleArticle;
+export class ArticleComponent implements OnInit, OnDestroy {
   articleSlug: string = '';
   article: Article | null = null;
   articleSubscription?: Subscription;
   areCommentsVisible: boolean = false;
 
   commentInput: string = '';
-  isCommentInputVisible = false;
+  user: User | null = null;
+  userSubscription?: Subscription;
+
   readonly ISOdateStringToLocaleDate = ISOdateStringToLocaleDate;
 
   constructor(
     private articleService: ArticleService,
     private route: ActivatedRoute,
+    private authenticationService: AuthenticationService,
   ) {
     this.route.params.subscribe((params) => {
       this.articleSlug = params['slug'];
@@ -39,6 +44,14 @@ export class ArticleComponent implements OnInit {
 
   ngOnInit() {
     this.getArticle(this.articleSlug);
+    this.userSubscription =
+      this.authenticationService.userDataMessage$.subscribe(
+        (user) => (this.user = user),
+      );
+  }
+
+  ngOnDestroy() {
+    this.userSubscription?.unsubscribe();
   }
 
   getArticle(articleSlug: string) {
@@ -54,10 +67,6 @@ export class ArticleComponent implements OnInit {
     this.areCommentsVisible = !this.areCommentsVisible;
   }
 
-  showCommentInput() {
-    this.isCommentInputVisible = true;
-  }
-
   sendComment() {
     if (this.article === null) {
       return;
@@ -71,5 +80,59 @@ export class ArticleComponent implements OnInit {
         }
         this.article.comments = [comment, ...this.article.comments];
       });
+  }
+
+  isUserLoggedIn() {
+    return this.user !== null;
+  }
+
+  toggleOpenReplyBoxBelow(comment: Comment) {
+    comment.hasOpenReplyBox = !comment.hasOpenReplyBox;
+  }
+
+  async toggleLikeComment(comment: Comment) {
+    if (!this.isUserLoggedIn()) return;
+
+    const newIsLikedByCurrentUser = !comment.isLikedByCurrentUser;
+    const newLikes = comment.likes + (newIsLikedByCurrentUser ? 1 : -1);
+    const newIsDislikedByCurrentUser = false;
+    const newDislikes =
+      comment.dislikes +
+      (newIsLikedByCurrentUser && comment.isDislikedByCurrentUser ? -1 : 0);
+    comment.isLikedByCurrentUser = newIsLikedByCurrentUser;
+    comment.likes = newLikes;
+    comment.isDislikedByCurrentUser = newIsDislikedByCurrentUser;
+    comment.dislikes = newDislikes;
+
+    await firstValueFrom(this.articleService.likeComment(comment.id));
+  }
+
+  async toggleDislikeComment(comment: Comment) {
+    if (!this.isUserLoggedIn()) return;
+
+    const newIsDislikedByCurrentUser = !comment.isDislikedByCurrentUser;
+    const newDislikes =
+      comment.dislikes + (newIsDislikedByCurrentUser ? 1 : -1);
+    const newIsLikedByCurrentUser = false;
+    const newLikes =
+      comment.likes +
+      (newIsDislikedByCurrentUser && comment.isLikedByCurrentUser ? -1 : 0);
+    comment.isLikedByCurrentUser = newIsLikedByCurrentUser;
+    comment.likes = newLikes;
+    comment.isDislikedByCurrentUser = newIsDislikedByCurrentUser;
+    comment.dislikes = newDislikes;
+
+    await firstValueFrom(this.articleService.dislikeComment(comment.id));
+  }
+
+  async sendReply(comment: Comment) {
+    if (this.article === null) return;
+    await firstValueFrom(
+      this.articleService.sendReplyToComment(
+        this.article.id,
+        comment.id,
+        comment.replyText,
+      ),
+    );
   }
 }

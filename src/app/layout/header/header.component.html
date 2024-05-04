@@ -11,6 +11,11 @@
     <a mat-button routerLink="articles">Articles</a>
     <div style="margin-left: 20px;"></div>
     @if (userData | async) {
+      <div class="welcome-div">
+        <span class="display-name">
+          {{ (userData | async)!.displayName }}
+        </span>
+      </div>
       <app-menu></app-menu>
     } @else {
       <button mat-button (click)="openLoginDialog()">Log in</button>

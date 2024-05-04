@@ -30,14 +30,14 @@
           <div class="section">
             <div class="section-controls">
               <button mat-icon-button class="clickable" (click)="moveSectionUp(index)" [disabled]="index === 0">
-                <mat-icon>arrow_upward</mat-icon>
+                <mat-icon class="material-symbols-outlined">arrow_upward</mat-icon>
               </button>
               <button mat-icon-button class="clickable" (click)="moveSectionDown(index)"
                       [disabled]="index == sections.length - 1">
-                <mat-icon>arrow_downward</mat-icon>
+                <mat-icon class="material-symbols-outlined">arrow_downward</mat-icon>
               </button>
               <button mat-icon-button class="clickable" (click)="deleteSection(index)">
-                <mat-icon>close</mat-icon>
+                <mat-icon class="material-symbols-outlined">close</mat-icon>
               </button>
             </div>
             <div class="section-content">

@@ -33,9 +33,6 @@
   text-align: center;
 }
 
-//.author {
-//  margin: 20px;
-//}
 
 .article-and-comments-wrapper {
   display: flex;
@@ -110,5 +107,34 @@
     justify-content: end;
   }
 }
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+
+  button {
+    margin-right: 10px;
+  }
+
+  mat-icon {
+    //width: 20px;
+    //height: 20px;
+  }
+}
+
+.reply-box {
+  mat-form-field {
+    width: 100%;
+  }
+
+  textarea {
+    width: 100%;
+  }
+}
+
+.clicked {
+  filter: invert(65%) sepia(58%) saturate(1360%) hue-rotate(359deg) brightness(100%) contrast(105%);
+}
+
 
 // clicked like or dislike button color: #FFAB00

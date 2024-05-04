@@ -28,10 +28,9 @@ export class AuthorComponent implements OnChanges {
   constructor(private articleService: ArticleService) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    const articleHeaderChanges = changes['articleHeader'];
-    if (articleHeaderChanges && articleHeaderChanges.firstChange) {
-      const x =
-        articleHeaderChanges.currentValue as ArticleWithoutTextAndComments;
+    const articleChanges = changes['article'];
+    if (articleChanges && articleChanges.firstChange) {
+      const x = articleChanges.currentValue as ArticleWithoutTextAndComments;
       if (x !== null) {
         this.isLikedByCurrentUser = x.isLikedByCurrentUser;
         this.isDislikedByCurrentUser = x.isDislikedByCurrentUser;
@@ -42,13 +41,13 @@ export class AuthorComponent implements OnChanges {
   }
 
   toggleLikeArticle() {
-    console.log('hello from toggleLikeArticle');
+    // console.log('hello from toggleLikeArticle');
     if (this.isLikeDislikeDisabled) {
-      console.log('isLikeDislikeDisabled true');
+      // console.log('isLikeDislikeDisabled true');
       return;
     }
     if (this.article === null) {
-      console.log('articleHeader is null');
+      // console.log('articleHeader is null');
       return;
     }
 
@@ -78,13 +77,13 @@ export class AuthorComponent implements OnChanges {
   }
 
   toggleDislikeArticle() {
-    console.log('hello from toggleDislikeArticle');
+    // console.log('hello from toggleDislikeArticle');
     if (this.isLikeDislikeDisabled) {
       console.log('isLikeDislikeDisabled true');
       return;
     }
     if (this.article === null) {
-      console.log('articleHeader is null');
+      // console.log('articleHeader is null');
       return;
     }
 

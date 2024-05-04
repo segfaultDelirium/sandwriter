@@ -10,7 +10,9 @@ export type SignupOrLoginResponse = {
   login: string;
 };
 
-export interface User extends UserModifiableFields, Timestamps {}
+export interface User extends UserModifiableFields, Timestamps {
+  id: string;
+}
 
 export interface UserModifiableFields {
   login: string;
