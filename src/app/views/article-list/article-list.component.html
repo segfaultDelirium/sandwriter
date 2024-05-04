@@ -1,8 +1,6 @@
 @for (article of articles; track article.id) {
   <div class="article-element">
-    <span class="clickable article-title"
-          (click)="router.navigate(['/articles/by-slug/' + article.slug]);">{{ article.title }}
-    </span>
+    <a class="clickable article-title" [routerLink]="'/articles/by-slug/' + article.slug">{{ article.title }}</a>
 
     <app-author [article]="article" [isLikeDislikeDisabled]="true" [isCommentButtonDisabled]="true"></app-author>
   </div>

@@ -22,6 +22,17 @@ function addCommentPropertiesToAllCommentsInArticle(article: Article): Article {
   };
 }
 
+function sortCommentsByDateDescending(article: Article): Article {
+  return {
+    ...article,
+    comments: article.comments.sort((a, b) => {
+      const aDate = new Date(a.insertedAt).getTime();
+      const bDate = new Date(b.insertedAt).getTime();
+      return aDate < bDate ? 1 : -1;
+    }),
+  };
+}
+
 function addRepliesRec(comment: Comment, replies: Comment[]): Comment {
   const repliesToThisComment = replies.filter(
     (reply) => reply.repliesTo === comment.id,
@@ -62,6 +73,7 @@ export class ArticleService {
       ) as Observable<Article>
     ).pipe(
       map(addCommentPropertiesToAllCommentsInArticle),
+      map(sortCommentsByDateDescending),
       map(makeCommentsHierarchical),
     );
   }

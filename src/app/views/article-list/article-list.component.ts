@@ -3,12 +3,12 @@ import { ArticleService } from '../article/article.service';
 import { ArticleWithoutTextAndComments } from '../article/types';
 import { AuthorComponent } from '../article/author/author.component';
 import { MaterialModule } from '../../material.module';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-article-list',
   standalone: true,
-  imports: [AuthorComponent, MaterialModule],
+  imports: [AuthorComponent, MaterialModule, RouterLink],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.scss',
 })
