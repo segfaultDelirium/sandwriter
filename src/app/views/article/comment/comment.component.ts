@@ -76,6 +76,7 @@ export class CommentComponent {
         comment.replyText,
       ),
     );
+    // debugger;
     comment.replies = [...comment.replies, newComment];
     comment.hasOpenReplyBox = false;
     comment.replyText = '';

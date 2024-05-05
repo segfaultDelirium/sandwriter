@@ -11,7 +11,7 @@
     </div>
     <div class="comment-text">
             <span class="comment-text">
-              @if (comment.isShortenedTextVisible) {
+              @if (comment.isShortenedTextVisible && comment.text.length > 200) {
                 {{ getShortenedCommentText(comment.text) }}
               } @else {
                 {{ comment.text }}
