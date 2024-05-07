@@ -22,7 +22,7 @@ export class ArticleListComponent implements OnInit {
 
   ngOnInit() {
     this.articleService.getArticlesWithoutTextAndComments().subscribe((x) => {
-      console.log(x);
+      // console.log(x);
       // debugger;
       this.articles = x;
     });

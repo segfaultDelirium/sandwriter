@@ -63,7 +63,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
       .getArticle(articleSlug)
       .subscribe((article) => {
         this.article = article;
-        console.log(article);
+        // console.log(article);
       });
   }
 
